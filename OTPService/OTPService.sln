@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTPService.API", "OTPService.API\OTPService.API.csproj", "{58CA26BB-EDCD-488C-88BD-60E063DF26AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTPService.Persistence", "OTPService.Persistence\OTPService.Persistence.csproj", "{B47791AE-D559-48E7-AE9B-4AA172C2615E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTPService.Application", "OTPService.Application\OTPService.Application.csproj", "{C319CCBF-3B19-4D90-83DD-43BE85B96153}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTPService.Domain", "OTPService.Domain\OTPService.Domain.csproj", "{431BC331-8D13-4E69-AA1B-9FE709A45C0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTPService.Infrastructure", "OTPService.Infrastructure\OTPService.Infrastructure.csproj", "{46DA340F-D2E3-4B6D-BC3F-50A9EA1A42D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTPService.Test", "OTPService.Test\OTPService.Test.csproj", "{7FDD4F0C-FBBC-463F-A75A-D5F9FE94DB85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58CA26BB-EDCD-488C-88BD-60E063DF26AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58CA26BB-EDCD-488C-88BD-60E063DF26AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58CA26BB-EDCD-488C-88BD-60E063DF26AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58CA26BB-EDCD-488C-88BD-60E063DF26AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B47791AE-D559-48E7-AE9B-4AA172C2615E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B47791AE-D559-48E7-AE9B-4AA172C2615E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B47791AE-D559-48E7-AE9B-4AA172C2615E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B47791AE-D559-48E7-AE9B-4AA172C2615E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C319CCBF-3B19-4D90-83DD-43BE85B96153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C319CCBF-3B19-4D90-83DD-43BE85B96153}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C319CCBF-3B19-4D90-83DD-43BE85B96153}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C319CCBF-3B19-4D90-83DD-43BE85B96153}.Release|Any CPU.Build.0 = Release|Any CPU
+		{431BC331-8D13-4E69-AA1B-9FE709A45C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{431BC331-8D13-4E69-AA1B-9FE709A45C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{431BC331-8D13-4E69-AA1B-9FE709A45C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{431BC331-8D13-4E69-AA1B-9FE709A45C0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46DA340F-D2E3-4B6D-BC3F-50A9EA1A42D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46DA340F-D2E3-4B6D-BC3F-50A9EA1A42D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46DA340F-D2E3-4B6D-BC3F-50A9EA1A42D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46DA340F-D2E3-4B6D-BC3F-50A9EA1A42D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FDD4F0C-FBBC-463F-A75A-D5F9FE94DB85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FDD4F0C-FBBC-463F-A75A-D5F9FE94DB85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FDD4F0C-FBBC-463F-A75A-D5F9FE94DB85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FDD4F0C-FBBC-463F-A75A-D5F9FE94DB85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

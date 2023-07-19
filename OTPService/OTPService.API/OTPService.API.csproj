@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MediatR" Version="12.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OTPService.Application\OTPService.Application.csproj" />
+      <ProjectReference Include="..\OTPService.Domain\OTPService.Domain.csproj" />
+      <ProjectReference Include="..\OTPService.Infrastructure\OTPService.Infrastructure.csproj" />
+      <ProjectReference Include="..\OTPService.Persistence\OTPService.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>
