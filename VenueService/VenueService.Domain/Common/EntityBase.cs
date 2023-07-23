@@ -22,7 +22,7 @@ public class EntityBase
         return (GetType().ToString() + Id).GetHashCode();
     }
 
-    public static bool operator ==(EntityBase left, EntityBase right)
+    public static bool operator ==(EntityBase left, EntityBase? right)
     {
         if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
             return true;

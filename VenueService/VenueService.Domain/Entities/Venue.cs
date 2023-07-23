@@ -7,12 +7,13 @@ public class Venue: AggregateRoot
 {
     public string Name;
     public Location Location;
-    public IList<Session> Sessions;
-
+    //public IList<Session> Sessions;
+    public List<Theater> Theaters;
+    
     public Venue(string name, Location location)
     {
         Name = name;
         Location = location;
-        Sessions = new List<Session>();
+        Theaters = new List<Theater>();
     }
 }

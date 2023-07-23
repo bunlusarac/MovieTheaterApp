@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueService.Domain", "VenueService.Domain\VenueService.Domain.csproj", "{F6F58F8B-0F32-4586-BCE5-23FACA023A79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueService.Application", "VenueService.Application\VenueService.Application.csproj", "{D9F46E57-32C3-4C01-9D80-ADC7C426B6CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{F6F58F8B-0F32-4586-BCE5-23FACA023A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6F58F8B-0F32-4586-BCE5-23FACA023A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6F58F8B-0F32-4586-BCE5-23FACA023A79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9F46E57-32C3-4C01-9D80-ADC7C426B6CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9F46E57-32C3-4C01-9D80-ADC7C426B6CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9F46E57-32C3-4C01-9D80-ADC7C426B6CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9F46E57-32C3-4C01-9D80-ADC7C426B6CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

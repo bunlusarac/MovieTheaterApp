@@ -7,11 +7,13 @@ public class SeatingState: EntityBase
 {
     public Dictionary<char, List<Seat>> State;
     public bool SeatNumbersDescend;
+    public int Capacity;
     
     public SeatingState(SeatingLayout seatingLayout, bool seatNumbersDescend = false)
     {
         State = new Dictionary<char, List<Seat>>();
         SeatNumbersDescend = seatNumbersDescend;
+        Capacity = 0;
         
         foreach (var seat in seatingLayout.Layout)
         {
@@ -27,11 +29,13 @@ public class SeatingState: EntityBase
                 {
                     if (SeatNumbersDescend) seatNumber -= 2;
                     else seatNumber += 2;
+                    Capacity += 2;
                 }
                 else if (seatType != SeatType.Empty)
                 {
                     if (SeatNumbersDescend) --seatNumber;
                     else ++seatNumber;
+                    ++Capacity;
                 }
             }
 
@@ -39,7 +43,7 @@ public class SeatingState: EntityBase
         }
     }
 
-    public Seat GetSeat(char rowLetter, int seatNumber)
+    private Seat GetSeat(char rowLetter, int seatNumber)
     {
         if (rowLetter is < 'A' or > 'Z') throw new Exception();
         var row = State[rowLetter];
@@ -48,7 +52,7 @@ public class SeatingState: EntityBase
         return seat;
     }
 
-    public void SetSeat(Seat seat, char rowLetter, int seatNumber)
+    private void SetSeat(Seat seat, char rowLetter, int seatNumber)
     {
         if (rowLetter is < 'A' or > 'Z') throw new Exception();
         var row = State[rowLetter];
@@ -59,6 +63,16 @@ public class SeatingState: EntityBase
     public void OccupySeat(char rowLetter, int seatNumber)
     {
         var seat = GetSeat(rowLetter, seatNumber);
+
+        if (seat.Type == SeatType.Double)
+        {
+            if (Capacity < 2) throw new Exception();
+        }
+        else
+        {
+            if (Capacity < 1) throw new Exception();
+        }
+            
         seat.Occupy();
         SetSeat(seat, rowLetter, seatNumber);
     }
@@ -68,5 +82,14 @@ public class SeatingState: EntityBase
         var seat = GetSeat(rowLetter, seatNumber);
         seat.Release();
         SetSeat(seat, rowLetter, seatNumber);
+
+        if (seat.Type == SeatType.Double)
+        {
+            Capacity += 2;
+        }
+        else
+        {
+            ++Capacity;
+        }
     }
 }
