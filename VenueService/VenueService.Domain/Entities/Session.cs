@@ -25,4 +25,14 @@ public class Session: EntityBase
         Localization = localization;
         Pricing = pricing;
     }
+    
+    public void OccupySeat(char rowLetter, int seatNumber)
+    {
+        SeatingState.OccupySeat(rowLetter, seatNumber);
+    }
+    
+    public void ReleaseSeat(char rowLetter, int seatNumber)
+    {
+        SeatingState.ReleaseSeat(rowLetter, seatNumber);
+    }
 }
