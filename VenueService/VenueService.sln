@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueService.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueService.Persistence", "VenueService.Persistence\VenueService.Persistence.csproj", "{D14436E6-368E-444E-A616-E8D7787D0B2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueService.API", "VenueService.API\VenueService.API.csproj", "{53F1C54F-1029-4F90-B59C-1195AA711FC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{D14436E6-368E-444E-A616-E8D7787D0B2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D14436E6-368E-444E-A616-E8D7787D0B2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D14436E6-368E-444E-A616-E8D7787D0B2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53F1C54F-1029-4F90-B59C-1195AA711FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53F1C54F-1029-4F90-B59C-1195AA711FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53F1C54F-1029-4F90-B59C-1195AA711FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53F1C54F-1029-4F90-B59C-1195AA711FC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
