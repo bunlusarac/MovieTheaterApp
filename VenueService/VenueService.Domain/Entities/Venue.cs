@@ -16,4 +16,8 @@ public class Venue: AggregateRoot
         Location = location;
         Theaters = new List<Theater>();
     }
+
+    public Venue()
+    {
+    }
 }

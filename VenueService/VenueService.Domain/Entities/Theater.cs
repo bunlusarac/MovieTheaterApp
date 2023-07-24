@@ -22,7 +22,7 @@ public class Theater: EntityBase
         Guid movieId, 
         SeatingLayout seatingLayout, 
         Localization localization,
-        Pricing pricing)
+        List<Pricing> pricing)
     {
         if(Sessions.Any(s => s.TimeRange.OverlapsWith(timeRange))) 
             throw new Exception();
@@ -36,5 +36,9 @@ public class Theater: EntityBase
     public void AddSession(Session session)
     {
         Sessions.Add(session);
+    }
+
+    public Theater()
+    {
     }
 }

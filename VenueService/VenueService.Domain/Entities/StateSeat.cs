@@ -3,16 +3,18 @@ using VenueService.Domain.Utils;
 
 namespace VenueService.Domain.Entities;
 
-public class Seat: EntityBase
+public class StateSeat: EntityBase
 {
-    public SeatType Type;
-    public bool Occupied;
-    public int SeatNumber;
+    public char Row { get; set; }
+    public bool Occupied { get; set; }
+    public SeatType Type { get; set; }
+    public int SeatNumber { get; set; }
     
-    public Seat(SeatType type, int seatNumber)
+    public StateSeat(SeatType type, int seatNumber)
     {
         Type = type;
         SeatNumber = seatNumber;
+        Occupied = false;
     }
 
     public void Occupy()
@@ -27,7 +29,7 @@ public class Seat: EntityBase
         Occupied = false;
     }
 
-    public Seat()
+    public StateSeat()
     {
     }
 }

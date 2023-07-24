@@ -28,4 +28,8 @@ public class Price: ValueObject<Price>
             return hashCode;
         }
     }
+
+    public Price()
+    {
+    }
 }

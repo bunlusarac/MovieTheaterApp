@@ -5,7 +5,7 @@ namespace VenueService.Domain.Entities;
 
 public class SeatingLayout: EntityBase
 {
-    public Dictionary<char, List<SeatType>> Layout;
+    public List<LayoutSeat> LayoutSeats;
     public int Width;
     public char LastRow;
 
@@ -13,24 +13,36 @@ public class SeatingLayout: EntityBase
     {
         LastRow = 'A';
         Width = width;
-        Layout = new Dictionary<char, List<SeatType>>();
+        LayoutSeats = new List<LayoutSeat>();
     }
 
     public void AddRow(List<SeatType> seats)
     {
         var size = 0;
-        
+        var layoutSeats = new List<LayoutSeat>();
+
         foreach (var seat in seats)
         {
             if (seat == SeatType.Double) size += 2;
             else ++size;
 
             if (size > Width) throw new Exception();
+            layoutSeats.Add(new LayoutSeat(LastRow, size, seat));
         }
 
-        Layout[LastRow] = seats;
-        ++LastRow;
+        LayoutSeats.AddRange(layoutSeats);
+        if (LastRow < 'Z') ++LastRow;
+    }
 
-        if (LastRow == 'Z') throw new Exception();
+    public void AddRows(List<SeatType> seats, int times)
+    {
+        for (int i = 0; i < times; i++)
+        {
+            AddRow(seats);
+        }
+    }
+
+    public SeatingLayout()
+    {
     }
 }
