@@ -4,10 +4,10 @@ namespace VenueService.Application.DTOs;
 
 public class SeatingStateDto
 {
-    public Dictionary<char, List<Seat>> State;
+    public List<StateSeat> StateSeats;
 
-    public SeatingStateDto()
+    public SeatingStateDto(List<StateSeat> stateSeats)
     {
-        State = new Dictionary<char, List<Seat>>();
+        StateSeats = stateSeats;
     }
 }

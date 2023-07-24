@@ -29,15 +29,15 @@ public class GetVenueSessionsQueryHandler : IRequestHandler<GetVenueSessionsQuer
     {
         var venue = await _venueRepository.GetById(request.VenueId);
 
-        var sessionDtos = venue.Theaters.SelectMany(t => t.Sessions.Select(s => new VenueSessionDto
-        {
-            StartTime = s.TimeRange.Start,
-            EndTime = s.TimeRange.End,
-            Localization = s.Localization,
-            Capacity = s.SeatingState.Capacity,
-            MovieId = s.MovieId,
-            Pricing = s.Pricing.Prices
-        }));
+        var sessionDtos = venue.Theaters.SelectMany(t => t.Sessions.Select(s => 
+            new VenueSessionDto(
+                s.TimeRange.Start,
+                s.TimeRange.End,
+                s.Localization,
+                s.SeatingState.Capacity,
+                s.MovieId,
+                s.Pricings)
+        ));
         
         return sessionDtos;
     }

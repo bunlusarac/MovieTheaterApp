@@ -6,10 +6,16 @@ namespace VenueService.Domain.Entities;
 
 public class Pricing: EntityBase
 {
-    public Dictionary<TicketType, Price> Prices;
+    public TicketType Type { get; set; }
+    public Price Price { get; set; }
 
-    public Pricing(Dictionary<TicketType, Price> prices)
+    public Pricing(TicketType type, Price price)
     {
-        Prices = prices;
+        Type = type;
+        Price = price;
+    }
+
+    public Pricing()
+    {
     }
 }

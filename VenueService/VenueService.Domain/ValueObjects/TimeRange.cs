@@ -36,4 +36,8 @@ public class TimeRange: ValueObject<TimeRange>
             return hashCode;
         }
     }
+
+    public TimeRange()
+    {
+    }
 }

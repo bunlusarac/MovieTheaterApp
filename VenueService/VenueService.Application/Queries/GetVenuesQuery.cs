@@ -1,6 +1,7 @@
 using MediatR;
 using VenueService.Application.DTOs;
 using VenueService.Application.Persistence;
+using VenueService.Domain.Utils;
 
 namespace VenueService.Application.Queries;
 
@@ -22,12 +23,11 @@ public class GetVenuesQueryHandler : IRequestHandler<GetVenuesQuery, IEnumerable
     {
         var venues = await _venueRepository.GetAll();
 
-        var venueDtos = venues.Select(v => new VenueDto
-        {
-            Location = v.Location,
-            Name = v.Name,
-            TheaterTypes = v.Theaters.Select(t => t.Type),
-        }).ToList();
+        var venueDtos = venues.Select(v => new VenueDto(
+            v.Name,
+            v.Location,
+            v.Theaters.Select(t => t.Type)
+        )).ToList();
 
         return venueDtos;
     }

@@ -1,6 +1,7 @@
 using MediatR;
 using VenueService.Application.DTOs;
 using VenueService.Application.Persistence;
+using VenueService.Domain.Entities;
 
 namespace VenueService.Application.Queries;
 
@@ -39,11 +40,7 @@ public class GetSessionSeatingStateQueryHandler : IRequestHandler<GetSessionSeat
         
         var session = venue.Theaters.First(s => s.Id == request.SessionId).Sessions.First(s => s.Id == request.SessionId);
 
-        var dto = new SeatingStateDto
-        {
-            State = session.SeatingState.State
-        };
-
+        var dto = new SeatingStateDto(session.SeatingState.StateSeats);
         return dto;
     }
 }

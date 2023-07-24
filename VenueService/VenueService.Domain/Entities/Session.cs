@@ -10,20 +10,20 @@ public class Session: EntityBase
     public Guid MovieId;
     public SeatingState SeatingState;
     public Localization Localization;
-    public Pricing Pricing;
+    public List<Pricing> Pricings;
     
     public Session(
         TimeRange timeRange, 
         Guid movieId, 
         SeatingLayout seatingLayout, 
         Localization localization,
-        Pricing pricing)
+        List<Pricing> pricings)
     {
         TimeRange = timeRange;
         MovieId = movieId;
         SeatingState = new SeatingState(seatingLayout);
         Localization = localization;
-        Pricing = pricing;
+        Pricings = pricings;
     }
     
     public void OccupySeat(char rowLetter, int seatNumber)
@@ -34,5 +34,9 @@ public class Session: EntityBase
     public void ReleaseSeat(char rowLetter, int seatNumber)
     {
         SeatingState.ReleaseSeat(rowLetter, seatNumber);
+    }
+
+    public Session()
+    {
     }
 }
