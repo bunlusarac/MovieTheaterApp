@@ -10,7 +10,7 @@ public class GetVenuesQuery: IRequest<List<VenueDto>>
     
 }
 
-public class GetVenuesQueryHandler : IRequestHandler<GetVenuesQuery, IEnumerable<VenueDto>>
+public class GetVenuesQueryHandler : IRequestHandler<GetVenuesQuery, List<VenueDto>>
 {
     private readonly IVenueRepository _venueRepository;
 
@@ -19,11 +19,12 @@ public class GetVenuesQueryHandler : IRequestHandler<GetVenuesQuery, IEnumerable
         _venueRepository = venueRepository;
     }
     
-    public async Task<IEnumerable<VenueDto>> Handle(GetVenuesQuery request, CancellationToken cancellationToken)
+    public async Task<List<VenueDto>> Handle(GetVenuesQuery request, CancellationToken cancellationToken)
     {
         var venues = await _venueRepository.GetAll();
 
         var venueDtos = venues.Select(v => new VenueDto(
+            v.Id,
             v.Name,
             v.Location,
             v.Theaters.Select(t => t.Type)

@@ -6,6 +6,8 @@ namespace VenueService.Persistence.Contexts;
 
 public class VenueDbContext: DbContext
 {
+    public DbSet<Venue> Venues { get; set; }
+
     public VenueDbContext(DbContextOptions options) : base(options)
     {
     }
@@ -28,6 +30,7 @@ public class VenueDbContext: DbContext
             theater.ToTable("Theaters");
             theater.HasKey(t => t.Id);
 
+            theater.Property(t => t.Name);
             theater.Property(t => t.Type);
             
             theater.HasOne(t => t.Layout);

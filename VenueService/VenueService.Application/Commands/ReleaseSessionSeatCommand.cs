@@ -6,12 +6,16 @@ namespace VenueService.Application.Commands;
 
 public class ReleaseSessionSeatCommand: IRequest
 {
+    public Guid VenueId { get; set; }
+    public Guid TheaterId { get; set; }
     public Guid SessionId { get; set; }
     public char SeatRow { get; set; }
     public int SeatNumber { get; set; }
 
-    public ReleaseSessionSeatCommand(Guid sessionId, char seatRow, int seatNumber)
+    public ReleaseSessionSeatCommand(Guid venueId, Guid theaterId, Guid sessionId, char seatRow, int seatNumber)
     {
+        VenueId = venueId;
+        TheaterId = theaterId;
         SessionId = sessionId;
         SeatRow = seatRow;
         SeatNumber = seatNumber;
@@ -29,21 +33,14 @@ public class ReleaseSessionSeatCommandHandler : IRequestHandler<ReleaseSessionSe
 
     public async Task Handle(ReleaseSessionSeatCommand request, CancellationToken cancellationToken)
     {
-        var queryable = await _venueRepository.GetAllQueryable();
-            
-        var query = 
-            queryable
-                .SelectMany(v => v.Theaters, (v, t) => new { Venue = v, Theater = t })
-                .SelectMany(x => x.Theater.Sessions, (x, s) => new { x.Venue, Session = s })
-                .Where(x => x.Session.Id == request.SessionId)
-                .Select(x => x.Venue);
-
-        var venue = query.ToList().First(); 
+        var venue = await _venueRepository.GetById(request.VenueId);
         if (venue == null) throw new Exception();
         
-        var session = venue.Theaters.First(s => s.Id == request.SessionId).Sessions.First(s => s.Id == request.SessionId);
-        session.ReleaseSeat(request.SeatRow, request.SeatNumber);
-
+        venue
+            .Theaters.First(t => t.Id == request.TheaterId)
+            .Sessions.First(s => s.Id == request.SessionId)
+            .OccupySeat(request.SeatRow, request.SeatNumber);
+        
         await _venueRepository.Update(venue);
     }
 }

@@ -4,12 +4,14 @@ namespace VenueService.Application.DTOs;
 
 public class VenueDto
 {
-    public string Name;
-    public Location Location;
-    public IEnumerable<TheaterType> TheaterTypes;
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public Location Location { get; set; }
+    public IEnumerable<TheaterType> TheaterTypes { get; set; }
 
-    public VenueDto(string name, Location location, IEnumerable<TheaterType> theaterTypes)
+    public VenueDto(Guid id, string name, Location location, IEnumerable<TheaterType> theaterTypes)
     {
+        Id = id;
         Name = name;
         Location = location;
         TheaterTypes = theaterTypes;

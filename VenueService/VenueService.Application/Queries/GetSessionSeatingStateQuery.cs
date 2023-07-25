@@ -7,10 +7,14 @@ namespace VenueService.Application.Queries;
 
 public class GetSessionSeatingStateQuery: IRequest<SeatingStateDto>
 {
+    public Guid VenueId { get; set; }
+    public Guid TheaterId { get; set; }
     public Guid SessionId { get; set; }
 
-    public GetSessionSeatingStateQuery(Guid sessionId)
+    public GetSessionSeatingStateQuery(Guid venueId, Guid theaterId, Guid sessionId)
     {
+        VenueId = venueId;
+        TheaterId = theaterId;
         SessionId = sessionId;
     }
 }
@@ -26,17 +30,7 @@ public class GetSessionSeatingStateQueryHandler : IRequestHandler<GetSessionSeat
     
     public async Task<SeatingStateDto> Handle(GetSessionSeatingStateQuery request, CancellationToken cancellationToken)
     {
-        var queryable = await _venueRepository.GetAllQueryable();
-            
-        var query = 
-            queryable
-                .SelectMany(v => v.Theaters, (v, t) => new { Venue = v, Theater = t })
-                .SelectMany(x => x.Theater.Sessions, (x, s) => new { x.Venue, Session = s })
-                .Where(x => x.Session.Id == request.SessionId)
-                .Select(x => x.Venue);
-        
-        var venue = query.ToList().First();
-        if (venue == null) throw new Exception();
+        var venue = await _venueRepository.GetById(request.VenueId);
         
         var session = venue.Theaters.First(s => s.Id == request.SessionId).Sessions.First(s => s.Id == request.SessionId);
 

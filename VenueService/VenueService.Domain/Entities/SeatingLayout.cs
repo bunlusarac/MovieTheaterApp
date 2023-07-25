@@ -5,7 +5,7 @@ namespace VenueService.Domain.Entities;
 
 public class SeatingLayout: EntityBase
 {
-    public List<LayoutSeat> LayoutSeats;
+    public virtual List<LayoutSeat> LayoutSeats { get; set; }
     public int Width;
     public char LastRow;
 

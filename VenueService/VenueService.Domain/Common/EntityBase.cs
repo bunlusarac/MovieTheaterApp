@@ -4,6 +4,11 @@ public class EntityBase
 {
     public Guid Id { get; }
 
+    public EntityBase()
+    {
+        Id = Guid.NewGuid();
+    }
+
     public override bool Equals(object? obj)
     {
         var other = obj as EntityBase;

@@ -5,8 +5,8 @@ namespace VenueService.Domain.ValueObjects;
 
 public class Price: ValueObject<Price>
 {
-    public decimal Amount;
-    public Currency Currency;
+    public decimal Amount { get; set; }
+    public Currency Currency { get; set; }
 
     public Price(decimal amount, Currency currency = Currency.TRY)
     {

@@ -109,7 +109,7 @@ namespace VenueService.Persistence.Migrations
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("SeatingStateId")
+                    b.Property<Guid>("SeatingStateId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("TheaterId")
@@ -158,8 +158,12 @@ namespace VenueService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("LayoutId")
+                    b.Property<Guid>("LayoutId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
@@ -234,7 +238,9 @@ namespace VenueService.Persistence.Migrations
                 {
                     b.HasOne("VenueService.Domain.Entities.SeatingState", "SeatingState")
                         .WithMany()
-                        .HasForeignKey("SeatingStateId");
+                        .HasForeignKey("SeatingStateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("VenueService.Domain.Entities.Theater", null)
                         .WithMany("Sessions")
@@ -263,7 +269,8 @@ namespace VenueService.Persistence.Migrations
 
                     b.Navigation("SeatingState");
 
-                    b.Navigation("TimeRange");
+                    b.Navigation("TimeRange")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VenueService.Domain.Entities.StateSeat", b =>
@@ -277,7 +284,9 @@ namespace VenueService.Persistence.Migrations
                 {
                     b.HasOne("VenueService.Domain.Entities.SeatingLayout", "Layout")
                         .WithMany()
-                        .HasForeignKey("LayoutId");
+                        .HasForeignKey("LayoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("VenueService.Domain.Entities.Venue", null)
                         .WithMany("Theaters")

@@ -8,7 +8,7 @@ public class Venue: AggregateRoot
     public string Name;
     public Location Location;
     //public IList<Session> Sessions;
-    public List<Theater> Theaters;
+    public virtual List<Theater> Theaters { get; set; }
     
     public Venue(string name, Location location)
     {
@@ -17,6 +17,21 @@ public class Venue: AggregateRoot
         Theaters = new List<Theater>();
     }
 
+    public void AddTheater(string name, int width, TheaterType type)
+    {
+        Theaters.Add(new Theater(name, width, type));
+    }
+    
+    public void AddTheater(string name, SeatingLayout layout, TheaterType type)
+    {
+        Theaters.Add(new Theater(name, layout, type));
+    }
+
+    public void AddTheater(Theater theater)
+    {
+        Theaters.Add(theater);
+    }
+    
     public Venue()
     {
     }

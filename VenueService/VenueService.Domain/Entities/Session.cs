@@ -6,16 +6,16 @@ namespace VenueService.Domain.Entities;
 
 public class Session: EntityBase
 {
-    public TimeRange TimeRange;
+    public virtual TimeRange TimeRange { get; set; }
     public Guid MovieId;
-    public SeatingState SeatingState;
+    public virtual SeatingState SeatingState { get; set; }
     public Localization Localization;
-    public List<Pricing> Pricings;
-    
+    public virtual List<Pricing> Pricings { get; set; }
+
     public Session(
-        TimeRange timeRange, 
-        Guid movieId, 
-        SeatingLayout seatingLayout, 
+        TimeRange timeRange,
+        Guid movieId,
+        SeatingLayout seatingLayout,
         Localization localization,
         List<Pricing> pricings)
     {

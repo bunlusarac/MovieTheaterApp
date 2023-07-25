@@ -5,7 +5,7 @@ namespace VenueService.Domain.Entities;
 
 public class SeatingState: EntityBase
 {
-    public List<StateSeat> StateSeats;
+    public virtual List<StateSeat> StateSeats { get; set; }
     public int Capacity;
     
     public SeatingState(SeatingLayout seatingLayout, bool seatNumbersDescend = false)
