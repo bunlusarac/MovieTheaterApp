@@ -1,6 +1,8 @@
 using VenueService.Domain.Common;
+using VenueService.Domain.Exceptions;
 using VenueService.Domain.Utils;
 using VenueService.Domain.ValueObjects;
+
 
 namespace VenueService.Domain.Entities;
 
@@ -8,8 +10,8 @@ public class Theater: EntityBase
 {
     public virtual SeatingLayout Layout { get; set; }
     public virtual List<Session> Sessions { get; set; }
-    public TheaterType Type;
-    public string Name;
+    public TheaterType Type { get; set; }
+    public string Name { get; set; }
     
     public Theater(string name, int width, TheaterType type = TheaterType.Standard2D)
     {
@@ -31,34 +33,26 @@ public class Theater: EntityBase
         TimeRange timeRange, 
         Guid movieId,
         Localization localization,
-        List<Pricing> pricing)
+        List<Pricing> pricings)
     {
         if(Sessions.Any(s => s.TimeRange.OverlapsWith(timeRange))) 
-            throw new Exception();
+            throw new VenueDomainException(VenueDomainErrorCode.SessionTimeRangeOverlap);
         
-        var session = new Session(timeRange, movieId, Layout, localization, pricing);
+        var session = new Session(timeRange, movieId, Layout, localization, pricings);
         Sessions.Add(session);
 
         return session;
     }
-    
-    public void AddSession(Session session)
-    {
-        Sessions.Add(session);
-    }
-    
-    public void DeleteSession(Session session)
-    {
-        Sessions.Remove(session);
-    }
-    
+
     public void DeleteSession(Guid sessionId)
     {
-        Sessions.Remove(Sessions.First(s => s.Id == sessionId));
+        var session = Sessions.FirstOrDefault(s => s.Id == sessionId);
+        if (session == null) throw new VenueDomainException(VenueDomainErrorCode.SessionDoesNotExist);
+        
+        session.SeatingState.StateSeats.Clear();
+        session.Pricings.Clear();
+        Sessions.Remove(session);
     }
 
-    
-    public Theater()
-    {
-    }
+    public Theater() { }
 }

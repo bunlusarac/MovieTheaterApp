@@ -4,11 +4,6 @@ public class EntityBase
 {
     public Guid Id { get; }
 
-    public EntityBase()
-    {
-        Id = Guid.NewGuid();
-    }
-
     public override bool Equals(object? obj)
     {
         var other = obj as EntityBase;
@@ -27,7 +22,7 @@ public class EntityBase
         return (GetType().ToString() + Id).GetHashCode();
     }
 
-    public static bool operator ==(EntityBase left, EntityBase? right)
+    public static bool operator ==(EntityBase? left, EntityBase? right)
     {
         if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
             return true;

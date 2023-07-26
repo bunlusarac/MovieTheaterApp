@@ -15,11 +15,17 @@ public class TimeRange: ValueObject<TimeRange>
 
     public bool OverlapsWith(TimeRange other)
     {
+        /*
         return
             other.Start <= Start && other.End <= End ||
             other.Start >= Start && other.End >= End ||
             other.Start <= Start && other.End >= End ||
             other.Start >= Start && other.End <= End;
+        */
+
+        return !(
+            other.Start < Start && other.End < Start ||
+            other.Start > End && other.End > End);
     }
     
     protected override bool EqualsCore(TimeRange other)

@@ -29,6 +29,7 @@ public class VenueRepository: IVenueRepository
         _context.Entry(entity).State = EntityState.Modified;
         var affectedRows = await _context.SaveChangesAsync();
         return affectedRows == 1 ? entity : null;
+        //return null;
     }
 
     public async Task<Venue> Add(Venue entity)

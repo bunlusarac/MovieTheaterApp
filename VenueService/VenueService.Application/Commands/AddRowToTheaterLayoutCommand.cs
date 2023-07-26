@@ -1,6 +1,6 @@
 using MediatR;
+using VenueService.Application.Exceptions;
 using VenueService.Application.Persistence;
-using VenueService.Domain.Entities;
 using VenueService.Domain.Utils;
 
 namespace VenueService.Application.Commands;
@@ -33,9 +33,12 @@ public class AddRowToTheaterLayoutCommandHandler : IRequestHandler<AddRowToTheat
     public async Task Handle(AddRowToTheaterLayoutCommand request, CancellationToken cancellationToken)
     {
         var venue = await _venueRepository.GetById(request.VenueId);
-        if (venue == null) throw new Exception();
+        if (venue == null) throw new VenueApplicationException(VenueApplicationErrorCode.VenueDoesNotExist);
 
-        venue.Theaters.First(t => t.Id == request.TheaterId).Layout.AddRows(request.RowSeats, request.Times);
+        var theater = venue.Theaters.FirstOrDefault(t => t.Id == request.TheaterId);
+        if (theater == null) throw new  VenueApplicationException(VenueApplicationErrorCode.TheaterDoesNotExist);
+        
+        theater.Layout.AddRows(request.RowSeats, request.Times);
         await _venueRepository.Update(venue);
     }
 }

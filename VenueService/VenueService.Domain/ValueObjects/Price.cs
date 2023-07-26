@@ -1,4 +1,5 @@
 using VenueService.Domain.Common;
+using VenueService.Domain.Exceptions;
 using VenueService.Domain.Utils;
 
 namespace VenueService.Domain.ValueObjects;
@@ -10,6 +11,8 @@ public class Price: ValueObject<Price>
 
     public Price(decimal amount, Currency currency = Currency.TRY)
     {
+        if (Amount < 0) throw new VenueDomainException(VenueDomainErrorCode.NegativePriceAmount);
+        
         Amount = amount;
         Currency = currency;
     }

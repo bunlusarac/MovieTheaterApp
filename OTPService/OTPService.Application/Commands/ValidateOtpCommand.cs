@@ -48,6 +48,7 @@ public class ValidateOtpCommandHandler : IRequestHandler<ValidateOtpCommand, Res
             {
                 Result validationResult;
 
+                
                 if (user.MfaEnabled)
                 {
                     if (primaryValidity && secondaryValidity)
@@ -63,7 +64,7 @@ public class ValidateOtpCommandHandler : IRequestHandler<ValidateOtpCommand, Res
                 }
                 else
                 {
-
+                    //TODO Strategy
                     if (primaryValidity)
                     {
                         

@@ -27,7 +27,7 @@ public class GetVenuesQueryHandler : IRequestHandler<GetVenuesQuery, List<VenueD
             v.Id,
             v.Name,
             v.Location,
-            v.Theaters.Select(t => t.Type)
+            v.Theaters.Select(t => t.Type).Distinct()
         )).ToList();
 
         return venueDtos;

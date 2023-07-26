@@ -1,5 +1,6 @@
 using MediatR;
 using VenueService.Application.DTOs;
+using VenueService.Application.Exceptions;
 using VenueService.Application.Persistence;
 
 namespace VenueService.Application.Queries;
@@ -29,10 +30,12 @@ public class GetTheaterSessionsQueryHandler : IRequestHandler<GetTheaterSessions
     {
         var venue = await _venueRepository.GetById(request.VenueId);
 
-        if (venue == null) throw new Exception(); //Not found
+        if (venue == null) throw new VenueApplicationException(VenueApplicationErrorCode.VenueDoesNotExist); //Not found
 
         var sessionDtos = venue.Theaters.Where(t => t.Id == request.TheaterId).SelectMany(t => t.Sessions)
-            .Select(s => new TheaterSessionDto(s.TimeRange.Start,
+            .Select(s => new TheaterSessionDto(
+                s.Id,
+                s.TimeRange.Start,
                 s.TimeRange.End,
                 s.Localization,
                 s.SeatingState.Capacity,

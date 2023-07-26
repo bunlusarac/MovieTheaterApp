@@ -1,4 +1,5 @@
 using MediatR;
+using VenueService.Application.Exceptions;
 using VenueService.Application.Persistence;
 
 namespace VenueService.Application.Commands;
@@ -29,9 +30,13 @@ public class DeleteSessionCommandHandler : IRequestHandler<DeleteSessionCommand>
     public async Task Handle(DeleteSessionCommand request, CancellationToken cancellationToken)
     {
         var venue = await _venueRepository.GetById(request.VenueId);
-        if (venue == null) throw new Exception();
+        if (venue == null) throw new VenueApplicationException(VenueApplicationErrorCode.VenueDoesNotExist);
 
-        venue.Theaters.First(t => t.Id == request.TheaterId).DeleteSession(request.SessionId);
+        var theater = venue.Theaters.FirstOrDefault(t => t.Id == request.TheaterId);
+        if (theater == null) throw new  VenueApplicationException(VenueApplicationErrorCode.TheaterDoesNotExist);
+        
+        theater.DeleteSession(request.SessionId);
+        
         await _venueRepository.Update(venue);
     }
 }

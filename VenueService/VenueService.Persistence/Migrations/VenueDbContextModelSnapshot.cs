@@ -37,7 +37,7 @@ namespace VenueService.Persistence.Migrations
                     b.Property<int>("SeatType")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("SeatingLayoutId")
+                    b.Property<Guid>("SeatingLayoutId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -53,7 +53,7 @@ namespace VenueService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("SessionId")
+                    b.Property<Guid>("SessionId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Type")
@@ -75,10 +75,16 @@ namespace VenueService.Persistence.Migrations
                     b.Property<char>("LastRow")
                         .HasColumnType("character(1)");
 
+                    b.Property<Guid>("TheaterId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Width")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TheaterId")
+                        .IsUnique();
 
                     b.ToTable("SeatingLayout");
                 });
@@ -92,7 +98,13 @@ namespace VenueService.Persistence.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SessionId")
+                        .IsUnique();
 
                     b.ToTable("SeatingState");
                 });
@@ -109,15 +121,10 @@ namespace VenueService.Persistence.Migrations
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("SeatingStateId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("TheaterId")
+                    b.Property<Guid>("TheaterId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SeatingStateId");
 
                     b.HasIndex("TheaterId");
 
@@ -139,7 +146,7 @@ namespace VenueService.Persistence.Migrations
                     b.Property<int>("SeatNumber")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("SeatingStateId")
+                    b.Property<Guid>("SeatingStateId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Type")
@@ -158,9 +165,6 @@ namespace VenueService.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("LayoutId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -168,12 +172,10 @@ namespace VenueService.Persistence.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("VenueId")
+                    b.Property<Guid>("VenueId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LayoutId");
 
                     b.HasIndex("VenueId");
 
@@ -202,14 +204,18 @@ namespace VenueService.Persistence.Migrations
                 {
                     b.HasOne("VenueService.Domain.Entities.SeatingLayout", null)
                         .WithMany("LayoutSeats")
-                        .HasForeignKey("SeatingLayoutId");
+                        .HasForeignKey("SeatingLayoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VenueService.Domain.Entities.Pricing", b =>
                 {
                     b.HasOne("VenueService.Domain.Entities.Session", null)
                         .WithMany("Pricings")
-                        .HasForeignKey("SessionId");
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsOne("VenueService.Domain.ValueObjects.Price", "Price", b1 =>
                         {
@@ -234,17 +240,31 @@ namespace VenueService.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VenueService.Domain.Entities.Session", b =>
+            modelBuilder.Entity("VenueService.Domain.Entities.SeatingLayout", b =>
                 {
-                    b.HasOne("VenueService.Domain.Entities.SeatingState", "SeatingState")
-                        .WithMany()
-                        .HasForeignKey("SeatingStateId")
+                    b.HasOne("VenueService.Domain.Entities.Theater", null)
+                        .WithOne("Layout")
+                        .HasForeignKey("VenueService.Domain.Entities.SeatingLayout", "TheaterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
+            modelBuilder.Entity("VenueService.Domain.Entities.SeatingState", b =>
+                {
+                    b.HasOne("VenueService.Domain.Entities.Session", null)
+                        .WithOne("SeatingState")
+                        .HasForeignKey("VenueService.Domain.Entities.SeatingState", "SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VenueService.Domain.Entities.Session", b =>
+                {
                     b.HasOne("VenueService.Domain.Entities.Theater", null)
                         .WithMany("Sessions")
-                        .HasForeignKey("TheaterId");
+                        .HasForeignKey("TheaterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsOne("VenueService.Domain.ValueObjects.TimeRange", "TimeRange", b1 =>
                         {
@@ -267,8 +287,6 @@ namespace VenueService.Persistence.Migrations
                                 .HasForeignKey("SessionId");
                         });
 
-                    b.Navigation("SeatingState");
-
                     b.Navigation("TimeRange")
                         .IsRequired();
                 });
@@ -277,22 +295,18 @@ namespace VenueService.Persistence.Migrations
                 {
                     b.HasOne("VenueService.Domain.Entities.SeatingState", null)
                         .WithMany("StateSeats")
-                        .HasForeignKey("SeatingStateId");
+                        .HasForeignKey("SeatingStateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VenueService.Domain.Entities.Theater", b =>
                 {
-                    b.HasOne("VenueService.Domain.Entities.SeatingLayout", "Layout")
-                        .WithMany()
-                        .HasForeignKey("LayoutId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("VenueService.Domain.Entities.Venue", null)
                         .WithMany("Theaters")
-                        .HasForeignKey("VenueId");
-
-                    b.Navigation("Layout");
+                        .HasForeignKey("VenueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VenueService.Domain.Entities.SeatingLayout", b =>
@@ -308,10 +322,16 @@ namespace VenueService.Persistence.Migrations
             modelBuilder.Entity("VenueService.Domain.Entities.Session", b =>
                 {
                     b.Navigation("Pricings");
+
+                    b.Navigation("SeatingState")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VenueService.Domain.Entities.Theater", b =>
                 {
+                    b.Navigation("Layout")
+                        .IsRequired();
+
                     b.Navigation("Sessions");
                 });
 

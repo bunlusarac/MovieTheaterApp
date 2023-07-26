@@ -1,4 +1,6 @@
 using MediatR;
+using VenueService.Application.DTOs;
+using VenueService.Application.Exceptions;
 using VenueService.Application.Persistence;
 using VenueService.Domain.Entities;
 using VenueService.Domain.Utils;
@@ -6,7 +8,7 @@ using VenueService.Domain.ValueObjects;
 
 namespace VenueService.Application.Commands;
 
-public class CreateSessionCommand : IRequest
+public class CreateSessionCommand : IRequest<SessionCreatedDto>
 {
     public Guid VenueId;
     public Guid TheaterId;
@@ -26,7 +28,7 @@ public class CreateSessionCommand : IRequest
     }
 }
 
-public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand>
+public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand, SessionCreatedDto>
 {
     private readonly IVenueRepository _venueRepository;
 
@@ -35,13 +37,17 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand>
         _venueRepository = venueRepository;
     }
 
-    public async Task Handle(CreateSessionCommand request, CancellationToken cancellationToken)
+    public async Task<SessionCreatedDto> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
     {
         var venue = await _venueRepository.GetById(request.VenueId);
-        if (venue == null) throw new Exception();
+        if (venue == null) throw new VenueApplicationException(VenueApplicationErrorCode.VenueDoesNotExist);
         
-        var theater = venue.Theaters.First(t => t.Id == request.TheaterId);
-        theater.AddSession(request.TimeRange, request.MovieId, request.Localization, request.Pricings);
+        var theater = venue.Theaters.FirstOrDefault(t => t.Id == request.TheaterId);
+        if (theater == null) throw new  VenueApplicationException(VenueApplicationErrorCode.TheaterDoesNotExist);
+        
+        var session = theater.AddSession(request.TimeRange, request.MovieId, request.Localization, request.Pricings);
         await _venueRepository.Update(venue);
+
+        return new SessionCreatedDto(session.Id);
     }
 }

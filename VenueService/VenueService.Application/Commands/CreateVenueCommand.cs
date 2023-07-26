@@ -1,11 +1,12 @@
 using MediatR;
+using VenueService.Application.DTOs;
 using VenueService.Application.Persistence;
 using VenueService.Domain.Entities;
 using VenueService.Domain.Utils;
 
 namespace VenueService.Application.Commands;
 
-public class CreateVenueCommand: IRequest
+public class CreateVenueCommand: IRequest<VenueCreatedDto>
 {
     public string Name { get; set; }
     public Location Location { get; set; }
@@ -17,7 +18,7 @@ public class CreateVenueCommand: IRequest
     }
 }
 
-public class CreateVenueCommandHandler : IRequestHandler<CreateVenueCommand>
+public class CreateVenueCommandHandler : IRequestHandler<CreateVenueCommand, VenueCreatedDto>
 {
     private readonly IVenueRepository _venueRepository;
 
@@ -25,12 +26,12 @@ public class CreateVenueCommandHandler : IRequestHandler<CreateVenueCommand>
     {
         _venueRepository = venueRepository;
     }
-    
-    public async Task Handle(CreateVenueCommand request, CancellationToken cancellationToken)
+
+    public async Task<VenueCreatedDto> Handle(CreateVenueCommand request, CancellationToken cancellationToken)
     {
         var venue = new Venue(request.Name, request.Location);
-        if (venue == null) throw new Exception();
-
         await _venueRepository.Add(venue);
+
+        return new VenueCreatedDto(venue.Id);
     }
 }

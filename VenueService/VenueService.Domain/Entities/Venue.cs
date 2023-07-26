@@ -1,13 +1,13 @@
 using VenueService.Domain.Common;
 using VenueService.Domain.Utils;
 
+
 namespace VenueService.Domain.Entities;
 
 public class Venue: AggregateRoot
 {
-    public string Name;
-    public Location Location;
-    //public IList<Session> Sessions;
+    public string Name { get; set; }
+    public Location Location { get; set; }
     public virtual List<Theater> Theaters { get; set; }
     
     public Venue(string name, Location location)
@@ -17,21 +17,13 @@ public class Venue: AggregateRoot
         Theaters = new List<Theater>();
     }
 
-    public void AddTheater(string name, int width, TheaterType type)
+    public Theater AddTheater(string name, int width, TheaterType type)
     {
-        Theaters.Add(new Theater(name, width, type));
-    }
-    
-    public void AddTheater(string name, SeatingLayout layout, TheaterType type)
-    {
-        Theaters.Add(new Theater(name, layout, type));
+        var theater = new Theater(name, width, type);
+        Theaters.Add(theater);
+        return theater;
     }
 
-    public void AddTheater(Theater theater)
-    {
-        Theaters.Add(theater);
-    }
-    
     public Venue()
     {
     }

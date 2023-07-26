@@ -1,4 +1,5 @@
 using MediatR;
+using VenueService.Application.Exceptions;
 using VenueService.Application.Persistence;
 
 namespace VenueService.Application.Commands;
@@ -33,12 +34,15 @@ public class ReserveSessionSeatCommandHandler : IRequestHandler<ReserveSessionSe
     public async Task Handle(ReserveSessionSeatCommand request, CancellationToken cancellationToken)
     {
         var venue = await _venueRepository.GetById(request.VenueId);
-        if (venue == null) throw new Exception();
+        if (venue == null) throw new VenueApplicationException(VenueApplicationErrorCode.VenueDoesNotExist);;
 
-        venue
-            .Theaters.First(t => t.Id == request.TheaterId)
-            .Sessions.First(s => s.Id == request.SessionId)
-            .OccupySeat(request.SeatRow, request.SeatNumber);
+        var theater = venue.Theaters.FirstOrDefault(t => t.Id == request.TheaterId);
+        if (theater == null) throw new VenueApplicationException(VenueApplicationErrorCode.TheaterDoesNotExist);
+        
+        var session = theater.Sessions.FirstOrDefault(s => s.Id == request.SessionId);
+        if (session == null) throw new VenueApplicationException(VenueApplicationErrorCode.SessionDoesNotExist);
+            
+        session.OccupySeat(request.SeatRow, request.SeatNumber);
         
         await _venueRepository.Update(venue);
     }
