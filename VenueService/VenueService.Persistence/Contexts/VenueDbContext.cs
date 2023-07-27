@@ -77,8 +77,10 @@ public class VenueDbContext: DbContext
         modelBuilder.Entity<SeatingState>(state =>
         {
             state.HasKey(s => s.Id);
+            
             state.Property(s => s.Capacity).IsRequired();
-
+            state.Property(s => s.LastRow).IsRequired();
+            
             state.HasMany(s => s.StateSeats).WithOne().OnDelete(DeleteBehavior.Cascade).IsRequired();
         });
         

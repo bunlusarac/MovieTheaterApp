@@ -30,8 +30,8 @@ public class VenueDomainException: Exception
                 
                 break;
             
-            case VenueDomainErrorCode.LayoutHeightOverflow:
-                Type = "https://docs.venue.com/errors/layout-width-overflow";
+            case VenueDomainErrorCode.MaximumLayoutHeightOverflow:
+                Type = "https://docs.venue.com/errors/max-layout-width-overflow";
                 Title = "Layout height overflowed";
                 Status = StatusCodes.Status400BadRequest;
                 Detail = "Amount of layout rows added surpassed the maximum possible number of rows in this theater.";

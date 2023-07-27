@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueService.Persistence", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueService.API", "VenueService.API\VenueService.API.csproj", "{53F1C54F-1029-4F90-B59C-1195AA711FC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VenueService.Test", "VenueService.Test\VenueService.Test.csproj", "{3069C589-FBC6-4F8C-9972-445A3D173430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{53F1C54F-1029-4F90-B59C-1195AA711FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53F1C54F-1029-4F90-B59C-1195AA711FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53F1C54F-1029-4F90-B59C-1195AA711FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3069C589-FBC6-4F8C-9972-445A3D173430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3069C589-FBC6-4F8C-9972-445A3D173430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3069C589-FBC6-4F8C-9972-445A3D173430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3069C589-FBC6-4F8C-9972-445A3D173430}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

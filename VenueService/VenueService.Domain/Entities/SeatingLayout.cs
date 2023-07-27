@@ -23,7 +23,7 @@ public class SeatingLayout: EntityBase
 
     public void AddRow(List<SeatType> seats)
     {
-        if (LastRow == 'Z' + 1) throw new VenueDomainException(VenueDomainErrorCode.LayoutHeightOverflow);
+        if (LastRow == 'Z' + 1) throw new VenueDomainException(VenueDomainErrorCode.MaximumLayoutHeightOverflow);
         
         var size = 0;
         var layoutSeats = new List<LayoutSeat>();

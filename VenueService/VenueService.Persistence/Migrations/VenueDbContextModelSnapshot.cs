@@ -98,6 +98,9 @@ namespace VenueService.Persistence.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("integer");
 
+                    b.Property<char>("LastRow")
+                        .HasColumnType("character(1)");
+
                     b.Property<Guid>("SessionId")
                         .HasColumnType("uuid");
 
