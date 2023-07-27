@@ -42,7 +42,7 @@ public class ReleaseSessionSeatCommandHandler : IRequestHandler<ReleaseSessionSe
         
         var session = theater.Sessions.FirstOrDefault(s => s.Id == request.SessionId);
         if (session == null) throw new VenueApplicationException(VenueApplicationErrorCode.SessionDoesNotExist);
-            
+        
         session.ReleaseSeat(request.SeatRow, request.SeatNumber);
         
         await _venueRepository.Update(venue);

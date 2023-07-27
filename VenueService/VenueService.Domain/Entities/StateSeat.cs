@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using VenueService.Domain.Common;
 using VenueService.Domain.Exceptions;
 using VenueService.Domain.Utils;
@@ -10,7 +11,9 @@ public class StateSeat: EntityBase
     public bool Occupied { get; set; }
     public SeatType Type { get; set; }
     public int SeatNumber { get; set; }
-
+    
+    public uint Version { get; set; }
+    
     public StateSeat(char row, SeatType type, int seatNumber)
     {
         Row = row;

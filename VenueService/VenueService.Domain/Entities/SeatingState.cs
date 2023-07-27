@@ -39,7 +39,6 @@ public class SeatingState: EntityBase
 
     private void SetSeat(StateSeat stateSeat)
     {
- 
         var idx = StateSeats.FindIndex(s => stateSeat.Id == s.Id);
         if (idx == -1) throw new VenueDomainException(VenueDomainErrorCode.SeatDoesNotExist);
         StateSeats[idx] = stateSeat;

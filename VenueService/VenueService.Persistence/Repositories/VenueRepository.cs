@@ -29,7 +29,13 @@ public class VenueRepository: IVenueRepository
         _context.Entry(entity).State = EntityState.Modified;
         var affectedRows = await _context.SaveChangesAsync();
         return affectedRows == 1 ? entity : null;
-        //return null;
+    }
+    
+    public async Task<int> UpdateSeatWithVersioning(StateSeat seat, int expectedVersion)
+    {
+        _context.Entry(seat).OriginalValues["Version"] = expectedVersion;
+        var affectedRows = await _context.SaveChangesAsync();
+        return affectedRows == 1 ? expectedVersion : -1;
     }
 
     public async Task<Venue> Add(Venue entity)

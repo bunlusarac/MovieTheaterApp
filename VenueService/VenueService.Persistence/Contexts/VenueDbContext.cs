@@ -85,11 +85,13 @@ public class VenueDbContext: DbContext
         modelBuilder.Entity<StateSeat>(stateSeat =>
         {
             stateSeat.HasKey(ls => ls.Id);
+
+            stateSeat.Property(ss => ss.Version).IsRowVersion();
             
-            stateSeat.Property(ls => ls.Row).IsRequired();
-            stateSeat.Property(ls => ls.SeatNumber).IsRequired();
-            stateSeat.Property(ls => ls.Type).IsRequired();
-            stateSeat.Property(ls => ls.Occupied).IsRequired();
+            stateSeat.Property(ss => ss.Row).IsRequired();
+            stateSeat.Property(ss => ss.SeatNumber).IsRequired();
+            stateSeat.Property(ss => ss.Type).IsRequired();
+            stateSeat.Property(ss => ss.Occupied).IsRequired();
         });
         
         modelBuilder.Entity<Pricing>(pricing =>
