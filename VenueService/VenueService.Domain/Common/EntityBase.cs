@@ -2,7 +2,7 @@ namespace VenueService.Domain.Common;
 
 public class EntityBase
 {
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
     public override bool Equals(object? obj)
     {

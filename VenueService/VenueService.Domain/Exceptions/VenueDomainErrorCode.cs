@@ -4,7 +4,7 @@ public enum VenueDomainErrorCode
 {
     NegativeLayoutWidth,
     LayoutWidthOverflow,
-    LayoutHeightOverflow,
+    MaximumLayoutHeightOverflow,
     TheaterCapacityIsFull,
     SessionEnded,
     SeatOccupied,

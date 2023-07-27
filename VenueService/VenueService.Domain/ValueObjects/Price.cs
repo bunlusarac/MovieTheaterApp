@@ -11,7 +11,7 @@ public class Price: ValueObject<Price>
 
     public Price(decimal amount, Currency currency = Currency.TRY)
     {
-        if (Amount < 0) throw new VenueDomainException(VenueDomainErrorCode.NegativePriceAmount);
+        if (decimal.IsNegative(amount)) throw new VenueDomainException(VenueDomainErrorCode.NegativePriceAmount);
         
         Amount = amount;
         Currency = currency;
