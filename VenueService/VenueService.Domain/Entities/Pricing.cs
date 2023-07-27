@@ -7,7 +7,7 @@ namespace VenueService.Domain.Entities;
 public class Pricing: EntityBase
 {
     public TicketType Type { get; set; }
-    public Price Price { get; set; }
+    public virtual Price Price { get; set; }
 
     public Pricing(TicketType type, Price price)
     {

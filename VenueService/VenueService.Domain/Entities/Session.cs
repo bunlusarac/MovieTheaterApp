@@ -1,21 +1,23 @@
 using VenueService.Domain.Common;
+using VenueService.Domain.Exceptions;
 using VenueService.Domain.Utils;
 using VenueService.Domain.ValueObjects;
+
 
 namespace VenueService.Domain.Entities;
 
 public class Session: EntityBase
 {
-    public TimeRange TimeRange;
-    public Guid MovieId;
-    public SeatingState SeatingState;
-    public Localization Localization;
-    public List<Pricing> Pricings;
-    
+    public virtual TimeRange TimeRange { get; set; }
+    public Guid MovieId { get; set; }
+    public virtual SeatingState SeatingState { get; set; }
+    public Localization Localization { get; set; }
+    public virtual List<Pricing> Pricings { get; set; }
+
     public Session(
-        TimeRange timeRange, 
-        Guid movieId, 
-        SeatingLayout seatingLayout, 
+        TimeRange timeRange,
+        Guid movieId,
+        SeatingLayout seatingLayout,
         Localization localization,
         List<Pricing> pricings)
     {
@@ -28,11 +30,13 @@ public class Session: EntityBase
     
     public void OccupySeat(char rowLetter, int seatNumber)
     {
+        if (DateTime.UtcNow > TimeRange.End) throw new VenueDomainException(VenueDomainErrorCode.SessionEnded);
         SeatingState.OccupySeat(rowLetter, seatNumber);
     }
     
     public void ReleaseSeat(char rowLetter, int seatNumber)
     {
+        if (DateTime.UtcNow > TimeRange.End) throw new VenueDomainException(VenueDomainErrorCode.SessionEnded);
         SeatingState.ReleaseSeat(rowLetter, seatNumber);
     }
 

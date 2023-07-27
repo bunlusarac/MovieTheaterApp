@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using VenueService.Domain.Common;
+using VenueService.Domain.Exceptions;
 using VenueService.Domain.Utils;
 
 namespace VenueService.Domain.Entities;
@@ -10,22 +12,27 @@ public class StateSeat: EntityBase
     public SeatType Type { get; set; }
     public int SeatNumber { get; set; }
     
-    public StateSeat(SeatType type, int seatNumber)
+    public uint Version { get; set; }
+    
+    public StateSeat(char row, SeatType type, int seatNumber)
     {
+        Row = row;
+        Occupied = false;
         Type = type;
         SeatNumber = seatNumber;
-        Occupied = false;
     }
 
     public void Occupy()
     {
-        if (Occupied && Type == SeatType.Empty) throw new Exception();
+        if (Occupied) throw new VenueDomainException(VenueDomainErrorCode.SeatOccupied);
+        if (Type == SeatType.Empty) throw new VenueDomainException(VenueDomainErrorCode.SeatDoesNotExist);
         Occupied = true;
     }
 
     public void Release()
     {
-        if (!Occupied && Type == SeatType.Empty) throw new Exception();
+        if (!Occupied) throw new VenueDomainException(VenueDomainErrorCode.SeatIsNotOccupied);
+        if (Type == SeatType.Empty) throw new VenueDomainException(VenueDomainErrorCode.SeatDoesNotExist);
         Occupied = false;
     }
 
