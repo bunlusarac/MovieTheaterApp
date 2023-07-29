@@ -1,0 +1,139 @@
+using Microsoft.AspNetCore.Mvc;
+using MovieService.API.DTOs;
+using MovieService.Domain.Entities;
+using MovieService.Domain.Exceptions;
+using MovieService.Persistence.Exceptions;
+using MovieService.Persistence.Repositories;
+
+namespace MovieService.API.Controllers;
+
+/// <summary>
+/// CRUD controller for Movie entities.
+/// </summary>
+[ApiController]
+[Route("movies")]
+public class MovieController: ControllerBase
+{
+    private readonly MovieRepository _movieRepository;
+    
+    public MovieController(MovieRepository movieRepository)
+    {
+        _movieRepository = movieRepository;
+    }
+
+    /// <summary>
+    /// Get all movies.
+    /// </summary>
+    /// <returns>List of all Movie entities.</returns>
+    [HttpGet]
+    public async Task<List<Movie>> GetAllMovies()
+    {
+        return await _movieRepository.GetAllAsync();
+    }
+
+    /// <summary>
+    /// Get a Movie entity by its ID.
+    /// </summary>
+    /// <param name="movieId">ID of the sought movie.</param>
+    /// <returns></returns>
+    [HttpGet("{movieId:guid}")]
+    public async Task<Movie> GetMovieById(Guid movieId)
+    {
+        return await _movieRepository.GetByIdAsync(movieId);
+    }
+    
+    /// <summary>
+    /// Create a new Movie entity.
+    /// </summary>
+    /// <param name="movieDto">Object of properties of Movie entity to be created.</param>
+    [HttpPost("")]
+    public async Task AddMovie([FromBody] AddMovieDto movieDto)
+    {
+        var movie = new Movie(
+            movieDto.Name,
+            movieDto.Director,
+            movieDto.Actors,
+            movieDto.Genre,
+            movieDto.Summary,
+            movieDto.PosterImageUri,
+            movieDto.SmartSigns,
+            movieDto.Formats,
+            movieDto.ReleaseStatus,
+            movieDto.ReleaseDate);
+        
+        await _movieRepository.AddAsync(movie);
+    }
+    
+    /// <summary>
+    /// Update a Movie entity of given ID.
+    /// </summary>
+    /// <param name="movieId">ID of Movie entity to be updated.</param>
+    [HttpPut("{movieId:guid}")]
+    public async Task UpdateMovie(Guid movieId, [FromBody] UpdateMovieDto movieDto)
+    {
+        var movie = await _movieRepository.GetByIdAsync(movieId);
+
+        movie.Name = movieDto.Name;
+        movie.Director = movieDto.Director;
+        movie.Actors = movieDto.Actors;
+        movie.Genre = movieDto.Genre;
+        movie.Summary = movieDto.Summary;
+        movie.PosterImageUri = movieDto.PosterImageUri;
+        movie.SmartSigns = movieDto.SmartSigns;
+        movie.Formats = movieDto.Formats;
+    }
+    
+    /// <summary>
+    /// Delete a Movie entity of given ID.
+    /// </summary>
+    /// <param name="movieId">ID of Movie entity to be deleted.</param>
+    /// <returns>Truth value regarding to success of delete operation.</returns>
+    [HttpDelete("{movieId:guid}")]
+    public async Task DeleteMovie(Guid movieId)
+    {
+        await _movieRepository.DeleteAsync(movieId);
+    } 
+    
+    /// <summary>
+    /// Set the movie as upcoming, i.e. as an unreleased movie with determined release date in the future.
+    /// At releaseDate, this movie is planned to be in the release status <c>ReleaseStatus.InTheaters</c>.
+    /// </summary>
+    /// <param name="movieId">ID of Movie entity to be set as upcoming.</param>
+    /// <param name="movieDto">Object that contains DateTime of release date.</param>
+    [HttpPut("{movieId:guid}/upcoming")]
+    public async Task SetMovieAsUpcoming(Guid movieId, [FromBody] SetMovieAsUpcomingDto movieDto)
+    {
+        var movie = await _movieRepository.GetByIdAsync(movieId);
+        movie.SetAsUpcoming(movieDto.ReleaseDate);
+        await _movieRepository.UpdateAsync(movie);
+        
+        //TODO add hangfire jobs
+    }
+    
+    /// <summary>
+    /// Set the movie as in theaters, i.e. as a recently released movie.
+    /// </summary>
+    /// <param name="movieId">ID of Movie entity to be set as in theaters.</param>
+    [HttpPut("{movieId:guid}/in-theaters")]
+    public async Task SetMovieAsInTheaters(Guid movieId)
+    {
+        var movie = await _movieRepository.GetByIdAsync(movieId);
+        movie.SetAsInTheaters();
+        
+        //TODO: Delete hangfire jobs
+
+        await _movieRepository.UpdateAsync(movie);
+    }
+    
+    /// <summary>
+    /// Set the movie as released, i.e. as a movie that has been released a long time ago.
+    /// </summary>
+    /// <param name="movieId">ID of Movie entity to be set as released.</param>
+    [HttpPut("{movieId:guid}/released")]
+    public async Task SetMovieAsReleased(Guid movieId)
+    {
+        var movie = await _movieRepository.GetByIdAsync(movieId);
+        movie.SetAsReleased();
+        await _movieRepository.UpdateAsync(movie);
+    }
+}
