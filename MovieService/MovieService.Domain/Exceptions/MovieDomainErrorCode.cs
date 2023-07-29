@@ -10,5 +10,4 @@ public enum MovieDomainErrorCode
     MovieAlreadyUpcoming,
     MovieAlreadyInTheaters,
     MovieAlreadyReleased,
-    MovieNotFound
 }

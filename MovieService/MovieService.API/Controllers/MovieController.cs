@@ -136,4 +136,30 @@ public class MovieController: ControllerBase
         movie.SetAsReleased();
         await _movieRepository.UpdateAsync(movie);
     }
+    
+    /// <summary>
+    /// Update the movie's release date to a given date.
+    /// </summary>
+    /// <param name="movieId">ID of Movie entity whose release date will be updated.</param>
+    /// <param name="releaseDateDto">Object containing information about new release date.</param>
+    [HttpPut("{movieId:guid}/release-date")]
+    public async Task SetMovieReleaseDate(Guid movieId, SetReleaseDateDto releaseDateDto)
+    {
+        var movie = await _movieRepository.GetByIdAsync(movieId);
+        movie.ReleaseDate = releaseDateDto.ReleaseDate;
+        await _movieRepository.UpdateAsync(movie);
+    }
+
+    /// <summary>
+    /// Rate a movie with given ID, with the provided score.
+    /// </summary>
+    /// <param name="movieId">ID of Movie entity to be rated.</param>
+    /// <param name="rating">Rating score in the interval [1, 10]</param>
+    [HttpPut("{movieId:guid}/rate/{rating:int}")]
+    public async Task RateMovie(Guid movieId, int rating)
+    {
+        var movie = await _movieRepository.GetByIdAsync(movieId);
+        movie.UpdateRating(rating);
+        await _movieRepository.UpdateAsync(movie);
+    }
 }

@@ -37,6 +37,10 @@ public class Movie: EntityBase
         // If it is upcoming, a release date later than now must be provided.
         if(releaseStatus == ReleaseStatus.Upcoming && releaseDate <= DateTime.UtcNow) 
             throw new MovieDomainException(MovieDomainErrorCode.InvalidReleaseDate);
+
+        // If it is not upcoming, a release date that is past from now must be provided.
+        if (releaseStatus != ReleaseStatus.Upcoming && releaseDate > DateTime.UtcNow)
+            throw new MovieDomainException(MovieDomainErrorCode.InvalidReleaseDate);
         
         Name = name;
         Director = director;
@@ -82,7 +86,7 @@ public class Movie: EntityBase
     }
 
     /// <summary>
-    /// Set the movie as in theaters, i.e. as a recently released movie.   
+    /// Set the movie as in theaters, i.e. as a recently released movie.
     /// </summary>
     /// <exception cref="MovieDomainException">Thrown when movie is already in theaters, i.e. the movie is already
     /// on release status <c>ReleaseStatus.MovieAlreadyFeatured</c>.</exception>
@@ -90,7 +94,7 @@ public class Movie: EntityBase
     {
         if (ReleaseStatus == ReleaseStatus.InTheaters) 
             throw new MovieDomainException(MovieDomainErrorCode.MovieAlreadyInTheaters);
-
+        
         ReleaseStatus = ReleaseStatus.InTheaters;
     }
 
@@ -103,5 +107,24 @@ public class Movie: EntityBase
     {
         if (ReleaseStatus == ReleaseStatus.Released)
             throw new MovieDomainException(MovieDomainErrorCode.MovieAlreadyReleased);
+
+        ReleaseStatus = ReleaseStatus.Released;
+    }
+
+    /// <summary>
+    /// Set movies release date. If the new release date is prior to current datetime,
+    /// its release status will be set to Upcoming. If the new release date is past the
+    /// current datetime, its release status will be set to Released.
+    /// </summary>
+    /// <param name="newReleaseDate">new release date of the Movie</param>
+    public void SetReleaseDate(DateTime newReleaseDate)
+    {
+        if (newReleaseDate < DateTime.UtcNow)
+            ReleaseStatus = ReleaseStatus.Released;
+
+        if (newReleaseDate > DateTime.UtcNow)
+            ReleaseStatus = ReleaseStatus.Upcoming;
+
+        ReleaseDate = newReleaseDate;
     }
 }
