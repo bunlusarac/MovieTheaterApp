@@ -5,6 +5,9 @@ using MovieService.Persistence.Exceptions;
 
 namespace MovieService.Domain.Entities;
 
+/// <summary>
+/// Entity that represents movies and contains locators and further information about them. 
+/// </summary>
 public class Movie: EntityBase
 {
     public string Name { get; set; }
@@ -17,8 +20,8 @@ public class Movie: EntityBase
     public long RatingsCount { get; set; }
     public List<SmartSign> SmartSigns { get; set; }
     public List<Format> Formats { get; set; }
-    public bool IsUpcoming { get; set; }
-    public bool IsFeatured { get; set; }
+    public ReleaseStatus ReleaseStatus { get; set; }
+    public DateTime ReleaseDate { get; set; }
 
     public Movie(string name,
         string director,
@@ -26,50 +29,102 @@ public class Movie: EntityBase
         Genre genre,
         string summary,
         string posterImageUri,
-        double rating,
-        long ratingsCount,
         List<SmartSign> smartSigns,
         List<Format> formats,
-        bool isUpcoming,
-        bool isFeatured)
+        ReleaseStatus releaseStatus,
+        DateTime releaseDate)
     {
+        // If it is upcoming, a release date later than now must be provided.
+        if(releaseStatus == ReleaseStatus.Upcoming && releaseDate <= DateTime.UtcNow) 
+            throw new MovieDomainException(MovieDomainErrorCode.InvalidReleaseDate);
+
+        // If it is not upcoming, a release date that is past from now must be provided.
+        if (releaseStatus != ReleaseStatus.Upcoming && releaseDate > DateTime.UtcNow)
+            throw new MovieDomainException(MovieDomainErrorCode.InvalidReleaseDate);
+        
         Name = name;
         Director = director;
         Actors = actors;
         Genre = genre;
         Summary = summary;
         PosterImageUri = posterImageUri;
-        Rating = rating;
-        RatingsCount = ratingsCount;
         SmartSigns = smartSigns;
         Formats = formats;
-        IsUpcoming = isUpcoming;
-        IsFeatured = isFeatured;
+        ReleaseStatus = releaseStatus;
+        ReleaseDate = releaseDate;
+
+        Rating = 0;
+        RatingsCount = 0;
     }
 
+    /// <summary>
+    /// Add a rating value to movie's current rating and update the mean rating.
+    /// </summary>
+    /// <param name="newRating">New rating value</param>
+    /// <exception cref="MovieDomainException">Thrown when <c>newRating</c> is invalid.</exception>
     public void UpdateRating(int newRating)
     {
         if (newRating is < 1 or > 10) throw new MovieDomainException(MovieDomainErrorCode.InvalidRatingValue);
         Rating = (Rating * RatingsCount + newRating) / (RatingsCount + 1);
+        ++RatingsCount;
     }
 
-    public void SetAsUpcoming()
+    /// <summary>
+    /// Set the movie as upcoming, i.e. as an unreleased movie with determined release date in the future.
+    /// At <c>releaseDate</c>, this movie is planned to be in the release status <c>ReleaseStatus.InTheaters</c>.  
+    /// </summary>
+    /// <param name="releaseDate">Determined release date of the movie</param>
+    /// <exception cref="MovieDomainException">Thrown when movie is already released, i.e. the movie is already
+    /// on release status <c>ReleaseStatus.Upcoming</c></exception>
+    public void SetAsUpcoming(DateTime releaseDate)
     {
-        if (IsUpcoming) throw new MovieDomainException(MovieDomainErrorCode.MovieAlreadyUpcoming);
-        if (IsFeatured) IsFeatured = false;
-        IsUpcoming = true;
-    }
-    
-    public void SetAsFeatured()
-    {
-        if (IsFeatured) throw new MovieDomainException(MovieDomainErrorCode.MovieAlreadyFeatured);
-        if (IsUpcoming) IsUpcoming = false; 
-        IsFeatured = true;
+        if (ReleaseStatus == ReleaseStatus.Upcoming) 
+            throw new MovieDomainException(MovieDomainErrorCode.MovieAlreadyUpcoming);
+
+        ReleaseDate = releaseDate;
+        ReleaseStatus = ReleaseStatus.Upcoming;
     }
 
-    public void UnsetAsFeatured()
+    /// <summary>
+    /// Set the movie as in theaters, i.e. as a recently released movie.
+    /// </summary>
+    /// <exception cref="MovieDomainException">Thrown when movie is already in theaters, i.e. the movie is already
+    /// on release status <c>ReleaseStatus.MovieAlreadyFeatured</c>.</exception>
+    public void SetAsInTheaters()
     {
-        if (IsFeatured == false) throw new MovieDomainException(MovieDomainErrorCode.MovieAlreadyNotFeatured);
-        IsFeatured = false;
+        if (ReleaseStatus == ReleaseStatus.InTheaters) 
+            throw new MovieDomainException(MovieDomainErrorCode.MovieAlreadyInTheaters);
+        
+        ReleaseStatus = ReleaseStatus.InTheaters;
+    }
+
+    /// <summary>
+    /// Set the movie as released, i.e. as a movie that has been released a long time ago.
+    /// </summary>
+    /// <exception cref="MovieDomainException">Thrown when movie is already released, i.e. the movie is already
+    /// on release status <c>ReleaseStatus.Released</c>.</exception>
+    public void SetAsReleased()
+    {
+        if (ReleaseStatus == ReleaseStatus.Released)
+            throw new MovieDomainException(MovieDomainErrorCode.MovieAlreadyReleased);
+
+        ReleaseStatus = ReleaseStatus.Released;
+    }
+
+    /// <summary>
+    /// Set movies release date. If the new release date is prior to current datetime,
+    /// its release status will be set to Upcoming. If the new release date is past the
+    /// current datetime, its release status will be set to Released.
+    /// </summary>
+    /// <param name="newReleaseDate">new release date of the Movie</param>
+    public void SetReleaseDate(DateTime newReleaseDate)
+    {
+        if (newReleaseDate < DateTime.UtcNow)
+            ReleaseStatus = ReleaseStatus.Released;
+
+        if (newReleaseDate > DateTime.UtcNow)
+            ReleaseStatus = ReleaseStatus.Upcoming;
+
+        ReleaseDate = newReleaseDate;
     }
 }

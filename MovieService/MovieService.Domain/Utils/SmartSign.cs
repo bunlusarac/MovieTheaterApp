@@ -1,5 +1,11 @@
+using System.Text.Json.Serialization;
+
 namespace MovieService.Domain.Utils;
 
+/// <summary>
+/// An enum specifying smart signs defined by RTUK that are assigned for a movie.
+/// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SmartSign
 {
     GeneralAudience,
