@@ -1,3 +1,4 @@
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using MovieService.API.DTOs;
 using MovieService.Domain.Entities;
@@ -107,7 +108,39 @@ public class MovieController: ControllerBase
         movie.SetAsUpcoming(movieDto.ReleaseDate);
         await _movieRepository.UpdateAsync(movie);
         
-        //TODO add hangfire jobs
+        // Schedule Hangfire job
+        BackgroundJob.Schedule(() => SetMovieAsInTheatersJob(movieId), movieDto.ReleaseDate - DateTime.UtcNow);
+    }
+
+    /// <summary>
+    /// Hangfire job method responsible for setting the movie as In Theaters on the release date.
+    /// </summary>
+    /// <param name="movieId"></param>
+    [NonAction]
+    public void SetMovieAsInTheatersJob(Guid movieId)
+    {
+        var movie = _movieRepository.GetById(movieId);
+        movie.SetAsInTheaters();
+        _movieRepository.Update(movie);
+    }
+
+    /// <summary>
+    /// Deletes all jobs of a Movie entity with given job title registered to Hangfire.
+    /// </summary>
+    /// <param name="jobName">Name of jobs to be deleted</param>
+    /// <param name="movieId">ID of the Movie entity whose jobs are to be deleted</param>
+    [NonAction]
+    public void DeleteJob(string jobName, Guid movieId)
+    {
+        var monitor = JobStorage.Current.GetMonitoringApi();
+        var jobsScheduled = monitor.ScheduledJobs(0, int.MaxValue)
+            .Where(x => x.Value.Job.Method.Name == jobName);
+
+        foreach (var j in jobsScheduled)
+        {
+            var jobMovieId = (Guid) j.Value.Job.Args[0];
+            if (jobMovieId == movieId) BackgroundJob.Delete(j.Key);
+        }
     }
     
     /// <summary>
@@ -119,10 +152,10 @@ public class MovieController: ControllerBase
     {
         var movie = await _movieRepository.GetByIdAsync(movieId);
         movie.SetAsInTheaters();
-        
-        //TODO: Delete hangfire jobs
-
         await _movieRepository.UpdateAsync(movie);
+        
+        // Delete scheduled Hangfire job if it exists
+        DeleteJob("SetMovieAsInTheatersJob", movieId);
     }
     
     /// <summary>
@@ -135,6 +168,9 @@ public class MovieController: ControllerBase
         var movie = await _movieRepository.GetByIdAsync(movieId);
         movie.SetAsReleased();
         await _movieRepository.UpdateAsync(movie);
+        
+        // Delete scheduled Hangfire job if it exists
+        DeleteJob("SetMovieAsInTheatersJob", movieId);
     }
     
     /// <summary>

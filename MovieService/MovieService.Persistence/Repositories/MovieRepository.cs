@@ -64,6 +64,7 @@ public class MovieRepository
     /// Update an existing Movie entity.
     /// </summary>
     /// <param name="movie">The updated Movie entity.</param>
+    /// <exception cref="MoviePersistenceException">Thrown when update fails.</exception>
     public async Task UpdateAsync(Movie movie)
     {
         var filter = Builders<Movie>.Filter.Eq(m => m.Id, movie.Id);
@@ -85,5 +86,33 @@ public class MovieRepository
 
         if (result.DeletedCount <= 0)
             throw new MoviePersistenceException(MoviePersistenceErrorCode.MovieDeletionFailed);
+    }
+
+    /// <summary>
+    /// Synchronous version of GetMovieByIdAsync for contexts where async calls are not allowed.
+    /// </summary>
+    /// <param name="id">ID of the sought Movie.</param>
+    /// <returns>The sought Movie entity.</returns>
+    /// <exception cref="MoviePersistenceException">Thrown when movie with given ID is not found.</exception>
+    public Movie GetById(Guid id)
+    {
+        var filter = Builders<Movie>.Filter.Eq(m => m.Id, id);
+        var movie = _movieCollection.Find(filter).FirstOrDefault();
+        if (movie == null) throw new MoviePersistenceException(MoviePersistenceErrorCode.MovieNotFound);
+        return movie; 
+    }
+    
+    /// <summary>
+    /// Synchronous version of UpdateAsync for contexts where async calls are not allowed.
+    /// </summary>
+    /// <param name="movie">The updated Movie entity.</param>
+    /// <exception cref="MoviePersistenceException">Thrown when update fails.</exception>
+    public void Update(Movie movie)
+    {
+        var filter = Builders<Movie>.Filter.Eq(m => m.Id, movie.Id);
+        var result = _movieCollection.ReplaceOne(filter, movie);
+
+        if (!result.IsModifiedCountAvailable || result.ModifiedCount <= 0)
+            throw new MoviePersistenceException(MoviePersistenceErrorCode.MovieUpdateFailed);
     }
 }

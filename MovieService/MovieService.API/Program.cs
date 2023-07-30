@@ -1,4 +1,6 @@
 using System.Reflection;
+using Hangfire;
+using Hangfire.Mongo;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -12,10 +14,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // Inject repository
-var connectionString = builder.Configuration.GetConnectionString("MovieDb");
-var dbName = "moviedb";
+var movieConnectionString = builder.Configuration.GetConnectionString("MovieDb");
+var hangfireConnectionString = builder.Configuration.GetConnectionString("HangfireDb");
+const string dbName = "moviedb";
 
-builder.Services.AddScoped<MovieRepository>(provider => new MovieRepository(connectionString, dbName));
+builder.Services.AddScoped<MovieRepository>(provider => new MovieRepository(movieConnectionString, dbName));
+
+// Register Hangfire
+builder.Services.AddHangfire(cfg =>
+{
+    // Current db does not support change stream (not a replica set)
+    // For instant (almost) handling of enqueued jobs, CheckQueuedJobsStrategy is set to TailNotificationsCollection
+    cfg.UseMongoStorage(hangfireConnectionString, new MongoStorageOptions
+    {
+        CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection
+    });
+});
 
 // Map thrown exceptions to problem details 
 builder.Services.AddProblemDetails((ProblemDetailsOptions cfg) =>
@@ -64,9 +78,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseHangfireDashboard();
+app.UseHangfireServer();
 
 app.MapControllers();
 
