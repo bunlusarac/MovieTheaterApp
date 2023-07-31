@@ -1,4 +1,5 @@
 using LoyaltyService.Application.DTOs;
+using LoyaltyService.Application.Persistence;
 using LoyaltyService.Domain.ValueObjects;
 using MediatR;
 
@@ -7,9 +8,9 @@ namespace LoyaltyService.Application.Commands;
 public class DepositToWalletCommand: IRequest
 {
     public Guid CustomerId { get; set; }
-    public PointsAmount PointsAmount { get; set; }
+    public decimal PointsAmount { get; set; }
 
-    public DepositToWalletCommand(Guid customerId, PointsAmount pointsAmount)
+    public DepositToWalletCommand(Guid customerId, decimal pointsAmount)
     {
         CustomerId = customerId;
         PointsAmount = pointsAmount;
@@ -18,8 +19,18 @@ public class DepositToWalletCommand: IRequest
 
 public class DepositToWalletCommandHandler : IRequestHandler<DepositToWalletCommand>
 {
-    public Task Handle(DepositToWalletCommand request, CancellationToken cancellationToken)
+    private readonly ILoyaltyCustomerRepository _loyaltyCustomerRepository;
+
+    public DepositToWalletCommandHandler(ILoyaltyCustomerRepository loyaltyCustomerRepository)
     {
-        throw new NotImplementedException();
+        _loyaltyCustomerRepository = loyaltyCustomerRepository;
+    }
+
+    public async Task Handle(DepositToWalletCommand request, CancellationToken cancellationToken)
+    {
+        var loyaltyCustomer = await _loyaltyCustomerRepository.GetByCustomerId(request.CustomerId);
+        var wallet = loyaltyCustomer.Wallet;
+        
+        wallet.Deposit(new PointsAmount(request.PointsAmount));
     }
 }

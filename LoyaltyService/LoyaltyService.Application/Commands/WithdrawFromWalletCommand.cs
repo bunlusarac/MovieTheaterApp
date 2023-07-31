@@ -1,3 +1,4 @@
+using LoyaltyService.Application.Persistence;
 using LoyaltyService.Domain.ValueObjects;
 using MediatR;
 
@@ -6,9 +7,9 @@ namespace LoyaltyService.Application.Commands;
 public class WithdrawFromWalletCommand: IRequest
 {
     public Guid CustomerId { get; set; }
-    public PointsAmount PointsAmount { get; set; }
+    public decimal PointsAmount { get; set; }
 
-    public WithdrawFromWalletCommand(Guid customerId, PointsAmount pointsAmount)
+    public WithdrawFromWalletCommand(Guid customerId, decimal pointsAmount)
     {
         CustomerId = customerId;
         PointsAmount = pointsAmount;
@@ -17,8 +18,18 @@ public class WithdrawFromWalletCommand: IRequest
 
 public class WithdrawFromWalletCommandHandler : IRequestHandler<WithdrawFromWalletCommand>
 {
-    public Task Handle(WithdrawFromWalletCommand request, CancellationToken cancellationToken)
+    private readonly ILoyaltyCustomerRepository _loyaltyCustomerRepository;
+
+    public WithdrawFromWalletCommandHandler(ILoyaltyCustomerRepository loyaltyCustomerRepository)
     {
-        throw new NotImplementedException();
+        _loyaltyCustomerRepository = loyaltyCustomerRepository;
+    }
+
+    public async Task Handle(WithdrawFromWalletCommand request, CancellationToken cancellationToken)
+    {
+        var loyaltyCustomer = await _loyaltyCustomerRepository.GetByCustomerId(request.CustomerId);
+        var wallet = loyaltyCustomer.Wallet;
+        
+        wallet.Withdraw(new PointsAmount(request.PointsAmount));
     }
 }

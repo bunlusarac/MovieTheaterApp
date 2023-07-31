@@ -7,7 +7,7 @@ public class CampaignDto
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public PointsAmount Cost { get; set; }
+    public decimal Cost { get; set; }
     public CampaignType Type { get; set; }
     public double DiscountRate { get; set; }
     public int MaxRedeems { get; set; }
