@@ -17,6 +17,12 @@ public class LoyaltyCustomer: AggregateRoot
         Redeems = new List<Redeem>();
     }
 
+    /// <summary>
+    /// Redeem given campaign from this customer's wallet
+    /// </summary>
+    /// <param name="campaign">Campaign entity to redeem</param>
+    /// <exception cref="LoyaltyDomainException">Thrown when redeeming fails, possibly due to
+    /// campaign being expired or customer redeeming more than campaign's <c>MaxRedeems</c> value.</exception>
     public void RedeemCampaign(Campaign campaign)
     {
         if (campaign.ExpirationDate <= DateTime.UtcNow)

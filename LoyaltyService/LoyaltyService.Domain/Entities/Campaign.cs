@@ -14,7 +14,7 @@ public class Campaign: AggregateRoot
     public double DiscountRate { get; set; }
     public int MaxRedeems { get; set; }
     public DateTime ExpirationDate { get; set; }
-    
+
     public Campaign(string name, string description, decimal cost, CampaignType type, double discountRate, int maxRedeems, DateTime expirationDate)
     {
         if (discountRate <= 0) 
