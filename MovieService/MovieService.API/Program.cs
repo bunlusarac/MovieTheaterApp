@@ -2,7 +2,6 @@ using System.Reflection;
 using Hangfire;
 using Hangfire.Mongo;
 using Hellang.Middleware.ProblemDetails;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using MovieService.Domain.Exceptions;
 using MovieService.Persistence.Exceptions;
