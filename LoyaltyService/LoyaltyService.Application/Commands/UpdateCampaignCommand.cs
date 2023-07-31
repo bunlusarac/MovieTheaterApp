@@ -30,6 +30,7 @@ public class UpdateCampaignCommandHandler : IRequestHandler<UpdateCampaignComman
 {
     public Task Handle(UpdateCampaignCommand request, CancellationToken cancellationToken)
     {
+        //validation!!!!!!!!!!!!!!!
         throw new NotImplementedException();
     }
 }
