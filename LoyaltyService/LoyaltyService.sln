@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoyaltyService.Domain", "LoyaltyService.Domain\LoyaltyService.Domain.csproj", "{839619AE-0AF6-46DF-9057-2F399BBD9F3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoyaltyService.Application", "LoyaltyService.Application\LoyaltyService.Application.csproj", "{DD789C61-2E28-4A8D-BCAA-21CCB7066935}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{839619AE-0AF6-46DF-9057-2F399BBD9F3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{839619AE-0AF6-46DF-9057-2F399BBD9F3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{839619AE-0AF6-46DF-9057-2F399BBD9F3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD789C61-2E28-4A8D-BCAA-21CCB7066935}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD789C61-2E28-4A8D-BCAA-21CCB7066935}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD789C61-2E28-4A8D-BCAA-21CCB7066935}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD789C61-2E28-4A8D-BCAA-21CCB7066935}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

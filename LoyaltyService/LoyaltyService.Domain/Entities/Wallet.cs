@@ -7,27 +7,23 @@ namespace LoyaltyService.Domain.Entities;
 public class Wallet: EntityBase
 {
     public Guid LoyaltyCustomerId { get; set; }
-    public Guid CustomerId { get; set; }
     public PointsAmount PointsBalance { get; set; }
 
     public Wallet(Guid loyaltyCustomerId, Guid customerId)
     {
         LoyaltyCustomerId = loyaltyCustomerId;
-        CustomerId = customerId;
         PointsBalance = new PointsAmount();
     }
 
     public Wallet(Guid loyaltyCustomerId, Guid customerId, PointsAmount pointsBalance)
     {
         LoyaltyCustomerId = loyaltyCustomerId;
-        CustomerId = customerId;
         PointsBalance = pointsBalance;
     }
 
     public Wallet(Guid loyaltyCustomerId, Guid customerId, decimal pointsBalance)
     {
         LoyaltyCustomerId = loyaltyCustomerId;
-        CustomerId = customerId;
         PointsBalance = new PointsAmount(pointsBalance);
     }
 

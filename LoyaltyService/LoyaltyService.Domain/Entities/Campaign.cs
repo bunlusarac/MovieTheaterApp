@@ -14,17 +14,16 @@ public class Campaign: AggregateRoot
     public double DiscountRate { get; set; }
     public int MaxRedeems { get; set; }
     public DateTime ExpirationDate { get; set; }
-    
+
     public Campaign(string name, string description, decimal cost, CampaignType type, double discountRate, int maxRedeems, DateTime expirationDate)
     {
-        if (discountRate <= 0) 
-            throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidDiscountRate);
-        
-        if (maxRedeems <= 0) 
-            throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidMaxRedeems);
-        
-        if (expirationDate >= DateTime.UtcNow)
-            throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidExpirationDate);
+        AssignCampaignDetails(name, description, cost, type, discountRate, maxRedeems, expirationDate);
+    }
+    
+    public void AssignCampaignDetails(string name, string description, decimal cost, CampaignType type, double discountRate,
+        int maxRedeems, DateTime expirationDate)
+    {
+        ValidateCampaignDetails(discountRate, maxRedeems, expirationDate);
         
         Name = name;
         Description = description;
@@ -34,4 +33,17 @@ public class Campaign: AggregateRoot
         MaxRedeems = maxRedeems;
         ExpirationDate = expirationDate;
     }
+    
+    private void ValidateCampaignDetails(double discountRate, int maxRedeems, DateTime expirationDate)
+    {
+        if (discountRate <= 0) 
+            throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidDiscountRate);
+        
+        if (maxRedeems <= 0) 
+            throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidMaxRedeems);
+        
+        if (expirationDate >= DateTime.UtcNow)
+            throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidExpirationDate);
+    }
+
 }
