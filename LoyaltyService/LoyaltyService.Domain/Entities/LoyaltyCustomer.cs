@@ -38,4 +38,8 @@ public class LoyaltyCustomer: AggregateRoot
         var redeem = new Redeem(campaign.Id, Id, DateTime.UtcNow, campaign.Cost);
         Redeems.Add(redeem);
     }
+
+    public LoyaltyCustomer()
+    {
+    }
 }

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoyaltyService.Domain", "Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoyaltyService.Application", "LoyaltyService.Application\LoyaltyService.Application.csproj", "{DD789C61-2E28-4A8D-BCAA-21CCB7066935}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoyaltyService.Persistence", "LoyaltyService.Persistence\LoyaltyService.Persistence.csproj", "{3446AE30-8FDF-4899-A830-8CD0D2DC7808}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{DD789C61-2E28-4A8D-BCAA-21CCB7066935}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD789C61-2E28-4A8D-BCAA-21CCB7066935}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD789C61-2E28-4A8D-BCAA-21CCB7066935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3446AE30-8FDF-4899-A830-8CD0D2DC7808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3446AE30-8FDF-4899-A830-8CD0D2DC7808}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3446AE30-8FDF-4899-A830-8CD0D2DC7808}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3446AE30-8FDF-4899-A830-8CD0D2DC7808}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

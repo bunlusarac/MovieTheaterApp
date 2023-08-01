@@ -46,4 +46,7 @@ public class Campaign: AggregateRoot
             throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidExpirationDate);
     }
 
+    public Campaign()
+    {
+    }
 }
