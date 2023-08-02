@@ -17,4 +17,8 @@ public class Redeem: EntityBase
         RedeemDate = redeemDate;
         Transaction = transaction;
     }
+
+    public Redeem()
+    {
+    }
 }

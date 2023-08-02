@@ -50,4 +50,8 @@ public class Wallet: EntityBase
 
         PointsBalance -= withdrawalAmount;
     }
+
+    public Wallet()
+    {
+    }
 }

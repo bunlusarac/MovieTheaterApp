@@ -1,4 +1,5 @@
 using LoyaltyService.Domain.Common;
+using LoyaltyService.Domain.Entities;
 
 namespace LoyaltyService.Application.Persistence;
 
