@@ -4,6 +4,7 @@ public enum LoyaltyDomainErrorCode
 {
     InsufficientFunds,
     InvalidPointsAmount,
+    InvalidDepositOrWithdrawalAmount,
     InvalidDiscountRate,
     InvalidExpirationDate,
     InvalidMaxRedeems,

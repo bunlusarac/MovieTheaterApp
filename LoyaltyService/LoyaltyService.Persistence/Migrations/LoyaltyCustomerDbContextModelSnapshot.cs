@@ -33,6 +33,9 @@ namespace LoyaltyService.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
                     b.ToTable("LoyaltyCustomers", (string)null);
                 });
 

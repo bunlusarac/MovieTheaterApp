@@ -32,5 +32,6 @@ public class DepositToWalletCommandHandler : IRequestHandler<DepositToWalletComm
         var wallet = loyaltyCustomer.Wallet;
         
         wallet.Deposit(new PointsAmount(request.PointsAmount));
+        await _loyaltyCustomerRepository.Update(loyaltyCustomer);
     }
 }

@@ -5,7 +5,7 @@ namespace LoyaltyService.Persistence.Contexts;
 
 public class CampaignDbContext: DbContextBase<Campaign>
 {
-    public CampaignDbContext(DbContextOptions options) : base(options)
+    public CampaignDbContext(DbContextOptions<CampaignDbContext> options) : base(options)
     {
     }
 

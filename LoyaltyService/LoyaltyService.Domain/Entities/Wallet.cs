@@ -31,8 +31,12 @@ public class Wallet: EntityBase
     /// Deposit arbitrary amount of points to this wallet. 
     /// </summary>
     /// <param name="depositAmount">amount of points to deposit</param>
+    /// <exception cref="LoyaltyDomainException">Thrown when amount to withdraw is non-negative.</exception>
     public void Deposit(PointsAmount depositAmount)
     {
+        if (depositAmount <= 0)
+            throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidDepositOrWithdrawalAmount);
+
         PointsBalance += depositAmount;
     }
 
@@ -40,13 +44,15 @@ public class Wallet: EntityBase
     /// Withdraw arbitrary amount of points from this wallet.
     /// </summary>
     /// <param name="withdrawalAmount">amount of points to withdraw</param>
-    /// <exception cref="LoyaltyDomainException"></exception>
+    /// <exception cref="LoyaltyDomainException">Thrown when amount to withdraw is non-negative
+    /// or there is insufficient funds in the wallet.</exception>
     public void Withdraw(PointsAmount withdrawalAmount)
     {
-        if (withdrawalAmount < PointsBalance)
-        {
+        if (withdrawalAmount <= 0)
+            throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidDepositOrWithdrawalAmount);
+        
+        if (withdrawalAmount > PointsBalance) 
             throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InsufficientFunds);
-        }
 
         PointsBalance -= withdrawalAmount;
     }

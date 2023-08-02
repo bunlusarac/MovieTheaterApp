@@ -5,7 +5,7 @@ namespace LoyaltyService.Persistence.Contexts;
 
 public class LoyaltyCustomerDbContext: DbContextBase<LoyaltyCustomer>
 {
-    public LoyaltyCustomerDbContext(DbContextOptions options) : base(options)
+    public LoyaltyCustomerDbContext(DbContextOptions<LoyaltyCustomerDbContext> options) : base(options)
     {
     }
 
@@ -17,7 +17,7 @@ public class LoyaltyCustomerDbContext: DbContextBase<LoyaltyCustomer>
 
             lc.HasKey(c => c.Id);
             
-            lc.Property(c => c.CustomerId).IsRequired();
+            lc.HasIndex(c => c.CustomerId).IsUnique();
 
             lc
                 .HasOne(c => c.Wallet)

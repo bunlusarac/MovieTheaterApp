@@ -31,5 +31,6 @@ public class WithdrawFromWalletCommandHandler : IRequestHandler<WithdrawFromWall
         var wallet = loyaltyCustomer.Wallet;
         
         wallet.Withdraw(new PointsAmount(request.PointsAmount));
+        await _loyaltyCustomerRepository.Update(loyaltyCustomer);
     }
 }

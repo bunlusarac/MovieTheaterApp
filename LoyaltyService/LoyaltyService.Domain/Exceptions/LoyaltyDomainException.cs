@@ -68,6 +68,13 @@ public class LoyaltyDomainException: Exception
                 Status = 400,
                 Detail = "Expiration date of a campaign cannot be in the past or present."
             },
+            LoyaltyDomainErrorCode.InvalidDepositOrWithdrawalAmount => new LoyaltyProblemDetails
+            {
+                Type = "https://docs.loyalty.com/errors/invalid-deposit-withdrawal-amount",
+                Title = "Invalid deposit or withdrawal amount",
+                Status = 400,
+                Detail = "Amount of points to deposit or withdraw cannot be non-negative."
+            },
             _ => new LoyaltyProblemDetails
             {
                 Type = "https://docs.loyalty.com/errors/domain-error",

@@ -7,8 +7,8 @@ namespace LoyaltyService.Domain.Entities;
 public class LoyaltyCustomer: AggregateRoot
 {
     public Guid CustomerId { get; set; }
-    public Wallet Wallet { get; set; }
-    public List<Redeem> Redeems { get; set; }
+    public virtual Wallet Wallet { get; set; }
+    public virtual List<Redeem> Redeems { get; set; }
 
     public LoyaltyCustomer(Guid customerId)
     {

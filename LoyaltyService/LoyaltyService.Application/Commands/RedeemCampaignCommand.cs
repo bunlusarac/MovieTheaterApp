@@ -35,5 +35,6 @@ public class RedeemCampaignCommandHandler : IRequestHandler<RedeemCampaignComman
         var campaign = await _campaignRepository.GetById(request.CampaignId);
         
         loyaltyCustomer.RedeemCampaign(campaign);
+        await _loyaltyCustomerRepository.Update(loyaltyCustomer);
     }
 }
