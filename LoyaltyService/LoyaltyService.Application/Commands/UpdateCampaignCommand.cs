@@ -16,8 +16,9 @@ public class UpdateCampaignCommand : IRequest
     public int MaxRedeems { get; set; }
     public DateTime ExpirationDate { get; set; }
 
-    public UpdateCampaignCommand(string name, string description, decimal cost, CampaignType type, double discountRate, int maxRedeems, DateTime expirationDate)
+    public UpdateCampaignCommand(Guid campaignId, string name, string description, decimal cost, CampaignType type, double discountRate, int maxRedeems, DateTime expirationDate)
     {
+        CampaignId = campaignId;
         Name = name;
         Description = description;
         Cost = cost;

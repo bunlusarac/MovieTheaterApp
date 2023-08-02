@@ -51,7 +51,7 @@ public class PointsAmount: ValueObject<PointsAmount>
 
     public static PointsAmount operator -(PointsAmount left, PointsAmount right)
     {
-        return left + decimal.MinusOne * right;
+        return new PointsAmount(left.Amount + decimal.MinusOne * right.Amount);
     }
     
     public static PointsAmount operator /(PointsAmount left, decimal right)
@@ -62,6 +62,26 @@ public class PointsAmount: ValueObject<PointsAmount>
     public static PointsAmount operator /(PointsAmount left, PointsAmount right)
     {
         return new PointsAmount(left.Amount / right.Amount);
+    }
+    
+    public static bool operator <=(decimal left, PointsAmount right)
+    {
+        return left <= right.Amount;
+    }
+    
+    public static bool operator >=(decimal left, PointsAmount right)
+    {
+        return left >= right.Amount;
+    }
+    
+    public static bool operator <=(PointsAmount left, decimal right)
+    {
+        return left.Amount <= right;
+    }
+    
+    public static bool operator >=(PointsAmount left, decimal right)
+    {
+        return left.Amount >= right;
     }
     
     public static bool operator <(PointsAmount left, PointsAmount right)

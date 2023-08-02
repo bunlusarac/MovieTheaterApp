@@ -1,11 +1,9 @@
 using LoyaltyService.Domain.Utils;
-using LoyaltyService.Domain.ValueObjects;
 
-namespace LoyaltyService.Application.DTOs;
+namespace LoyaltyService.API.DTOs;
 
-public class CampaignDto
+public class CreateCampaignDto
 {
-    public Guid CampaignId { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public decimal Cost { get; set; }

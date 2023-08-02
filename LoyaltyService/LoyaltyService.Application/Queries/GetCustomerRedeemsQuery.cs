@@ -30,6 +30,7 @@ public class GetCustomerRedeemsQueryHandler : IRequestHandler<GetCustomerRedeems
         
         return loyaltyCustomer.Redeems.Select(r => new RedeemDto
         {
+            RedeemId = r.Id,
             CampaignId = r.CampaignId,
             LoyaltyCustomerId = r.LoyaltyCustomerId,
             RedeemDate = r.RedeemDate,

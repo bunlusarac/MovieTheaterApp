@@ -30,7 +30,8 @@ public class GetCampaignsQueryHandler : IRequestHandler<GetCampaignsQuery, IEnum
             Type = c.Type,
             DiscountRate = c.DiscountRate,
             MaxRedeems = c.MaxRedeems,
-            ExpirationDate = c.ExpirationDate
+            ExpirationDate = c.ExpirationDate,
+            CampaignId = c.Id
         });
     }
 }
