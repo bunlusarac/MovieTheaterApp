@@ -1,45 +1,25 @@
 using LoyaltyService.Application.Persistence;
 using LoyaltyService.Domain.Entities;
+using LoyaltyService.Domain.Exceptions;
 using LoyaltyService.Persistence.Contexts;
+using LoyaltyService.Persistence.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace LoyaltyService.Persistence.Repositories;
 
-public class LoyaltyCustomerRepository: ILoyaltyCustomerRepository
+public class LoyaltyCustomerRepository: RepositoryAsync<LoyaltyCustomer>, ILoyaltyCustomerRepository
 {
-    private readonly LoyaltyCustomerDbContext _context;
-
-    public LoyaltyCustomerRepository(LoyaltyCustomerDbContext context)
+    public LoyaltyCustomerRepository(DbContextBase<LoyaltyCustomer> context) : base(context)
     {
-        _context = context;
     }
 
-    public Task<List<LoyaltyCustomer>> GetAll()
+    public async Task<LoyaltyCustomer> GetByCustomerId(Guid customerId)
     {
-        throw new NotImplementedException();
-    }
+        var entity = (await _context.DataSet.Where(c => c.CustomerId == customerId).ToListAsync()).FirstOrDefault();
 
-    public Task<LoyaltyCustomer> GetById(Guid entityId)
-    {
-        throw new NotImplementedException();
-    }
+        if (entity == null)
+            throw new LoyaltyPersistenceException(LoyaltyPersistenceErrorCode.NotFound);
 
-    public Task Update(LoyaltyCustomer entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task Add(LoyaltyCustomer entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteById(Guid entityId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<LoyaltyCustomer> GetByCustomerId(Guid customerId)
-    {
-        throw new NotImplementedException();
+        return entity;
     }
 }

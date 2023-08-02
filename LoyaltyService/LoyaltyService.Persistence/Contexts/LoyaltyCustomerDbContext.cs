@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LoyaltyService.Persistence.Contexts;
 
-public class LoyaltyCustomerDbContext: DbContext
+public class LoyaltyCustomerDbContext: DbContextBase<LoyaltyCustomer>
 {
-    public DbSet<LoyaltyCustomer> LoyaltyCustomers { get; set; }
-
     public LoyaltyCustomerDbContext(DbContextOptions options) : base(options)
     {
     }
