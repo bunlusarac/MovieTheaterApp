@@ -15,9 +15,9 @@ public class CreateSessionCommand : IRequest<SessionCreatedDto>
     public Guid MovieId;
     public TimeRange TimeRange;
     public Localization Localization;
-    public List<Pricing> Pricings;
+    public List<PricingDto> Pricings;
 
-    public CreateSessionCommand(Guid venueId, Guid theaterId, Guid movieId, TimeRange timeRange, Localization localization, List<Pricing> pricings)
+    public CreateSessionCommand(Guid venueId, Guid theaterId, Guid movieId, TimeRange timeRange, Localization localization, List<PricingDto> pricings)
     {
         VenueId = venueId;
         TheaterId = theaterId;
@@ -44,10 +44,15 @@ public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand,
         
         var theater = venue.Theaters.FirstOrDefault(t => t.Id == request.TheaterId);
         if (theater == null) throw new  VenueApplicationException(VenueApplicationErrorCode.TheaterDoesNotExist);
+
+        var pricings = request.Pricings.Select(dto => new Pricing(dto.Type, new Price(dto.Amount, dto.Currency)))
+            .ToList();
         
-        var session = theater.AddSession(request.TimeRange, request.MovieId, request.Localization, request.Pricings);
+        var session = theater.AddSession(request.TimeRange, request.MovieId, request.Localization, pricings);
+
         await _venueRepository.Update(venue);
 
-        return new SessionCreatedDto(session.Id);
+        return new SessionCreatedDto(Guid.NewGuid());
+        //return new SessionCreatedDto(session.Id);
     }
 }

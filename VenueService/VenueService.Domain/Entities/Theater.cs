@@ -12,6 +12,7 @@ public class Theater: EntityBase
     public virtual List<Session> Sessions { get; set; }
     public TheaterType Type { get; set; }
     public string Name { get; set; }
+
     
     public Theater(string name, int width, TheaterType type = TheaterType.Standard2D)
     {
@@ -30,6 +31,20 @@ public class Theater: EntityBase
     }
 
     public Session AddSession(
+        TimeRange timeRange,
+        Guid movieId,
+        Localization localization)
+    {
+        if(Sessions.Any(s => s.TimeRange.OverlapsWith(timeRange))) 
+            throw new VenueDomainException(VenueDomainErrorCode.SessionTimeRangeOverlap);
+
+        var session = new Session(timeRange, movieId, Layout, localization);
+        Sessions.Add(session);
+
+        return session;
+    }
+    
+    public Session AddSession(
         TimeRange timeRange, 
         Guid movieId,
         Localization localization,
@@ -39,6 +54,11 @@ public class Theater: EntityBase
             throw new VenueDomainException(VenueDomainErrorCode.SessionTimeRangeOverlap);
         
         var session = new Session(timeRange, movieId, Layout, localization, pricings);
+        //var session = new Session();
+        
+        //TODO
+        //session.Id = Guid.NewGuid();
+        
         Sessions.Add(session);
 
         return session;

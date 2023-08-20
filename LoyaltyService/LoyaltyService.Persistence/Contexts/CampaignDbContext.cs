@@ -13,7 +13,7 @@ public class CampaignDbContext: DbContextBase<Campaign>
     {
         modelBuilder.Entity<Campaign>(campaign =>
         {
-            campaign.ToTable("Campaigns");
+            campaign.ToTable("Campaign");
             
             campaign.HasKey(c => c.Id);
 
@@ -24,6 +24,9 @@ public class CampaignDbContext: DbContextBase<Campaign>
             campaign.Property(c => c.ExpirationDate).IsRequired();
             campaign.Property(c => c.MaxRedeems).IsRequired();
 
+            campaign.Property(c => c.Version).IsRowVersion();
+            campaign.Property(c => c.ConcurrencySecret).IsRequired();
+            
             campaign.OwnsOne(c => c.Cost, cost =>
             {
                 cost.Property(x => x.Amount).IsRequired();

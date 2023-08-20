@@ -12,13 +12,16 @@ public class ReserveSessionSeatCommand: IRequest
     public char SeatRow { get; set; }
     public int SeatNumber { get; set; }
 
-    public ReserveSessionSeatCommand(Guid venueId, Guid theaterId, Guid sessionId, char seatRow, int seatNumber)
+    public string Version { get; set; }
+
+    public ReserveSessionSeatCommand(Guid venueId, Guid theaterId, Guid sessionId, char seatRow, int seatNumber, string version)
     {
         VenueId = venueId;
         TheaterId = theaterId;
         SessionId = sessionId;
         SeatRow = seatRow;
         SeatNumber = seatNumber;
+        Version = version;
     }
 }
 
@@ -33,7 +36,6 @@ public class ReserveSessionSeatCommandHandler : IRequestHandler<ReserveSessionSe
 
     public async Task Handle(ReserveSessionSeatCommand request, CancellationToken cancellationToken)
     {
-        //Versioning
         var venue = await _venueRepository.GetById(request.VenueId);
         if (venue == null) throw new VenueApplicationException(VenueApplicationErrorCode.VenueDoesNotExist);;
 
@@ -42,8 +44,8 @@ public class ReserveSessionSeatCommandHandler : IRequestHandler<ReserveSessionSe
         
         var session = theater.Sessions.FirstOrDefault(s => s.Id == request.SessionId);
         if (session == null) throw new VenueApplicationException(VenueApplicationErrorCode.SessionDoesNotExist);
-
-        session.OccupySeat(request.SeatRow, request.SeatNumber);
+        
+        session.OccupySeat(request.SeatRow, request.SeatNumber, request.Version);
         
         await _venueRepository.Update(venue);
     }

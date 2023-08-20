@@ -4,7 +4,7 @@ namespace LoyaltyService.Persistence.Exceptions;
 
 public class LoyaltyPersistenceException: Exception
 {
-    public LoyaltyProblemDetails ProblemDetails;
+    public LoyaltyProblemDetails ProblemDetails { get; set; }
     
     public LoyaltyPersistenceException(LoyaltyPersistenceErrorCode persistenceErrorCode)
     {

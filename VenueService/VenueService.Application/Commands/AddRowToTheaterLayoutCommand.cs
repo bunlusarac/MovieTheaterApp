@@ -36,7 +36,7 @@ public class AddRowToTheaterLayoutCommandHandler : IRequestHandler<AddRowToTheat
         if (venue == null) throw new VenueApplicationException(VenueApplicationErrorCode.VenueDoesNotExist);
 
         var theater = venue.Theaters.FirstOrDefault(t => t.Id == request.TheaterId);
-        if (theater == null) throw new  VenueApplicationException(VenueApplicationErrorCode.TheaterDoesNotExist);
+        if (theater == null) throw new VenueApplicationException(VenueApplicationErrorCode.TheaterDoesNotExist);
         
         theater.Layout.AddRows(request.RowSeats, request.Times);
         await _venueRepository.Update(venue);

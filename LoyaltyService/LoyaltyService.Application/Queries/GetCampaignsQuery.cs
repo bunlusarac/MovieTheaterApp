@@ -20,7 +20,7 @@ public class GetCampaignsQueryHandler : IRequestHandler<GetCampaignsQuery, IEnum
 
     public async Task<IEnumerable<CampaignDto>> Handle(GetCampaignsQuery request, CancellationToken cancellationToken)
     {
-        var campaigns = await _campaignRepository.GetAll();
+        var campaigns = await _campaignRepository.GetAllWithLockWait();
 
         return campaigns.Select(c => new CampaignDto
         {

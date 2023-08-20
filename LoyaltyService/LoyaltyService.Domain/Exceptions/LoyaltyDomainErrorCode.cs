@@ -10,4 +10,5 @@ public enum LoyaltyDomainErrorCode
     InvalidMaxRedeems,
     CampaignRedeemedMoreThanMaxRedeems,
     CampaignExpired,
+    RedeemNotFound,
 }

@@ -22,8 +22,11 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(ReleaseSessionSeatCommandHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(ReserveSessionSeatCommandHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(GetSessionSeatingStateQueryHandler).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(GetSessionSeatingStateWithVersioningQueryHandler).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(GetSeatStateWithVersioningQueryHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(GetVenueSessionsQueryHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(GetVenuesQueryHandler).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(GetSessionQueryHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(GetTheaterSessionsQuery).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(GetVenueTheatersQueryHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(CreateSessionCommandHandler).Assembly);

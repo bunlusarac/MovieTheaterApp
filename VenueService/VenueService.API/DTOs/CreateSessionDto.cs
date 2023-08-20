@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using VenueService.Application.DTOs;
 using VenueService.Domain.Entities;
 using VenueService.Domain.Utils;
 using VenueService.Domain.ValueObjects;
@@ -33,7 +34,7 @@ public class CreateSessionDto
     /// <summary>
     /// Prices for different ticket types of this session 
     /// </summary>
-    public List<Pricing> Pricings { get; set; }
+    public List<PricingDto> Pricings { get; set; }
     
     /// <summary>
     /// Represents required parameters for session creation
@@ -43,7 +44,7 @@ public class CreateSessionDto
     /// <param name="endTime">End time of the session</param>
     /// <param name="localization">Localization for this session (subtitles, dubbing)</param>
     /// <param name="pricings">Prices for different ticket types of this session</param>
-    public CreateSessionDto(Guid movieId, DateTime startTime, DateTime endTime, Localization localization, List<Pricing> pricings)
+    public CreateSessionDto(Guid movieId, DateTime startTime, DateTime endTime, Localization localization, List<PricingDto> pricings)
     {
         MovieId = movieId;
         StartTime = startTime;

@@ -13,7 +13,7 @@ public class LoyaltyCustomerDbContext: DbContextBase<LoyaltyCustomer>
     {
         modelBuilder.Entity<LoyaltyCustomer>(lc =>
         {
-            lc.ToTable("LoyaltyCustomers");
+            lc.ToTable("LoyaltyCustomer");
 
             lc.HasKey(c => c.Id);
             

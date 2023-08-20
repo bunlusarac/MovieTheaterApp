@@ -2,7 +2,7 @@ namespace LoyaltyService.Domain.Exceptions;
 
 public class LoyaltyDomainException: Exception
 {
-    public LoyaltyProblemDetails ProblemDetails;
+    public LoyaltyProblemDetails ProblemDetails { get; set; }
     
     public LoyaltyDomainException(LoyaltyDomainErrorCode domainErrorCode)
     {
@@ -74,6 +74,13 @@ public class LoyaltyDomainException: Exception
                 Title = "Invalid deposit or withdrawal amount",
                 Status = 400,
                 Detail = "Amount of points to deposit or withdraw cannot be non-negative."
+            },
+            LoyaltyDomainErrorCode.RedeemNotFound => new LoyaltyProblemDetails
+            {
+                Type = "https://docs.loyalty.com/errors/redeem-not-found",
+                Title = "Redeem not found",
+                Status = 404,
+                Detail = "Specified redeem for this customer is not found."
             },
             _ => new LoyaltyProblemDetails
             {

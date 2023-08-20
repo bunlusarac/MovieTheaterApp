@@ -8,10 +8,11 @@ namespace VenueService.Domain.Entities;
 
 public class Session: EntityBase
 {
-    public virtual TimeRange TimeRange { get; set; }
+    public Guid TheaterId { get; set; }
     public Guid MovieId { get; set; }
-    public virtual SeatingState SeatingState { get; set; }
     public Localization Localization { get; set; }
+    public virtual TimeRange TimeRange { get; set; }
+    public virtual SeatingState SeatingState { get; set; }
     public virtual List<Pricing> Pricings { get; set; }
 
     public Session(
@@ -21,23 +22,36 @@ public class Session: EntityBase
         Localization localization,
         List<Pricing> pricings)
     {
+        //TODO: Workaround for not using Add
+        //Id = Guid.NewGuid();
+
         TimeRange = timeRange;
         MovieId = movieId;
-        SeatingState = new SeatingState(seatingLayout);
+        SeatingState = new SeatingState(seatingLayout); 
         Localization = localization;
         Pricings = pricings;
     }
-    
-    public void OccupySeat(char rowLetter, int seatNumber)
+
+    public Session(TimeRange timeRange, Guid movieId, SeatingLayout layout, Localization localization)
+    {
+        TimeRange = timeRange;
+        MovieId = movieId;
+        Localization = localization;
+        
+        SeatingState = new SeatingState(layout);
+        Pricings = new List<Pricing>();
+    }
+
+    public void OccupySeat(char rowLetter, int seatNumber, string concurrencyToken)
     {
         if (DateTime.UtcNow > TimeRange.End) throw new VenueDomainException(VenueDomainErrorCode.SessionEnded);
-        SeatingState.OccupySeat(rowLetter, seatNumber);
+        SeatingState.OccupySeat(rowLetter, seatNumber, concurrencyToken);
     }
     
-    public void ReleaseSeat(char rowLetter, int seatNumber)
+    public void ReleaseSeat(char rowLetter, int seatNumber/*, string concurrencyToken*/)
     {
         if (DateTime.UtcNow > TimeRange.End) throw new VenueDomainException(VenueDomainErrorCode.SessionEnded);
-        SeatingState.ReleaseSeat(rowLetter, seatNumber);
+        SeatingState.ReleaseSeat(rowLetter, seatNumber/*, concurrencyToken*/);
     }
 
     public Session()

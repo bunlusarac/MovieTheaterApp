@@ -5,4 +5,6 @@ public enum VenueApplicationErrorCode
     VenueDoesNotExist,
     TheaterDoesNotExist,
     SessionDoesNotExist,
+    SeatDoesNotExist,
+    SeatVersionOutdated,
 }

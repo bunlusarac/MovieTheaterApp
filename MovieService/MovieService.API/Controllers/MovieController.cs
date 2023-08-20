@@ -1,4 +1,5 @@
 using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieService.API.DTOs;
 using MovieService.Domain.Entities;
@@ -40,6 +41,7 @@ public class MovieController: ControllerBase
     [HttpGet("{movieId:guid}")]
     public async Task<Movie> GetMovieById(Guid movieId)
     {
+    
         return await _movieRepository.GetByIdAsync(movieId);
     }
     

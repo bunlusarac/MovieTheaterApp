@@ -21,4 +21,8 @@
       <ProjectReference Include="..\VenueService.Domain\VenueService.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>

@@ -24,6 +24,18 @@ public class CampaignController : ControllerBase
         return await _mediator.Send(new GetCampaignsQuery());
     }
     
+    [HttpGet("with-versioning")]
+    public async Task<IEnumerable<CampaignWithVersioningDto>> GetAllCampaignsWithVersioning()
+    {
+        return await _mediator.Send(new GetCampaignsWithVersioningQuery());
+    }
+    
+    [HttpGet("{campaignId:guid}/with-versioning")]
+    public async Task<CampaignWithVersioningDto> GetCampaignWithVersioning(Guid campaignId)
+    {
+        return await _mediator.Send(new GetCampaignWithVersioningQuery(campaignId));
+    }
+    
     [HttpPost("")]
     public async Task<CampaignCreatedDto> CreateCampaign([FromBody] CreateCampaignDto dto)
     {

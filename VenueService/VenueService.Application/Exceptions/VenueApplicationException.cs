@@ -35,6 +35,13 @@ public class VenueApplicationException: Exception
                 Detail = "There is no such session for given session ID.";
                 
                 break;
+            case VenueApplicationErrorCode.SeatDoesNotExist :
+                Type = "https://docs.venue.com/errors/seat-not-exist";
+                Title = "Seat does not exist";
+                Status = StatusCodes.Status404NotFound;
+                Detail = "There is no such seat for given seat row and seat number.";
+                
+                break;
             default:
                 Type = "";
                 Title = "Venue application exception";

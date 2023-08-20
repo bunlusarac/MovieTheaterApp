@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace VenueService.Domain.Common;
 
 public class EntityBase
 {
+    //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
     public override bool Equals(object? obj)

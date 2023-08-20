@@ -22,15 +22,22 @@ public class OtpController: ControllerBase
     [Route("validate")]
     public async Task<IActionResult> ValidateOtp([FromBody] ValidateOtpDto dto)
     {
+        /*
         var result = (Result) (await _mediator.Send(new ValidateOtpCommand(
             dto.PrimaryOtp, dto.SecondaryOtp, dto.UserId)) ?? Result.Error);
+        */
 
-        if (result.ResultCode == ResultCode.Error)
+        try
+        {
+            var cmd = new ValidateOtpCommand(dto.PrimaryOtp, dto.SecondaryOtp, dto.UserId);
+            return Ok(await _mediator.Send(cmd));
+        }
+        catch (Exception e)
+        {
             return Problem("Given OTP(s) are incorrect.",
                 "/otp/validate",
                 (int)OtpStatusCode.InvalidOtp, "Invalid OTP(s)");
-
-        return Ok();
+        }
     }
     
     [HttpPost]
