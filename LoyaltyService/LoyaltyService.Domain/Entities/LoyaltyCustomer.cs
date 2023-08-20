@@ -23,7 +23,7 @@ public class LoyaltyCustomer: AggregateRoot
     /// <param name="campaign">Campaign entity to redeem</param>
     /// <exception cref="LoyaltyDomainException">Thrown when redeeming fails, possibly due to
     /// campaign being expired or customer redeeming more than campaign's <c>MaxRedeems</c> value.</exception>
-    public void RedeemCampaign(Campaign campaign)
+    public Redeem RedeemCampaign(Campaign campaign)
     {
         if (campaign.ExpirationDate <= DateTime.UtcNow)
             throw new LoyaltyDomainException(LoyaltyDomainErrorCode.CampaignExpired);
@@ -37,6 +37,22 @@ public class LoyaltyCustomer: AggregateRoot
         
         var redeem = new Redeem(campaign.Id, Id, DateTime.UtcNow, campaign.Cost);
         Redeems.Add(redeem);
+
+        return redeem;
+    }
+    
+    /// <summary>
+    /// Refund a campaign redeem.
+    /// </summary>
+    /// <param name="redeemId">ID of campaign redeem</param>
+    /// <exception cref="LoyaltyDomainException">Thrown if the redeem is not found</exception>
+    public void RefundCampaign(Guid redeemId)
+    {
+        var redeem = Redeems.FirstOrDefault(r => r.Id == redeemId);
+        if (redeem == null) throw new LoyaltyDomainException(LoyaltyDomainErrorCode.RedeemNotFound);
+        
+        Wallet.Deposit(redeem.Transaction);
+        Redeems.Remove(redeem);
     }
 
     public LoyaltyCustomer()

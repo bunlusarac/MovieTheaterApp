@@ -28,6 +28,10 @@ namespace LoyaltyService.Persistence.Migrations.CampaignDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("ConcurrencySecret")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -48,9 +52,15 @@ namespace LoyaltyService.Persistence.Migrations.CampaignDb
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Campaigns", (string)null);
+                    b.ToTable("Campaign", (string)null);
                 });
 
             modelBuilder.Entity("LoyaltyService.Domain.Entities.Campaign", b =>
@@ -65,7 +75,7 @@ namespace LoyaltyService.Persistence.Migrations.CampaignDb
 
                             b1.HasKey("CampaignId");
 
-                            b1.ToTable("Campaigns");
+                            b1.ToTable("Campaign");
 
                             b1.WithOwner()
                                 .HasForeignKey("CampaignId");

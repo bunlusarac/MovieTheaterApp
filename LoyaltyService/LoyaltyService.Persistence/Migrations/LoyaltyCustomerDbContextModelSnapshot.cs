@@ -36,7 +36,7 @@ namespace LoyaltyService.Persistence.Migrations
                     b.HasIndex("CustomerId")
                         .IsUnique();
 
-                    b.ToTable("LoyaltyCustomers", (string)null);
+                    b.ToTable("LoyaltyCustomer", (string)null);
                 });
 
             modelBuilder.Entity("LoyaltyService.Domain.Entities.Redeem", b =>

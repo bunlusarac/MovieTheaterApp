@@ -12,14 +12,17 @@ public class ReleaseSessionSeatCommand: IRequest
     public Guid SessionId { get; set; }
     public char SeatRow { get; set; }
     public int SeatNumber { get; set; }
+    
+    //public string Version { get; set; }
 
-    public ReleaseSessionSeatCommand(Guid venueId, Guid theaterId, Guid sessionId, char seatRow, int seatNumber)
+    public ReleaseSessionSeatCommand(Guid venueId, Guid theaterId, Guid sessionId, char seatRow, int seatNumber/*, string version*/)
     {
         VenueId = venueId;
         TheaterId = theaterId;
         SessionId = sessionId;
         SeatRow = seatRow;
         SeatNumber = seatNumber;
+        //Version = version;
     }
 }
 
@@ -43,7 +46,7 @@ public class ReleaseSessionSeatCommandHandler : IRequestHandler<ReleaseSessionSe
         var session = theater.Sessions.FirstOrDefault(s => s.Id == request.SessionId);
         if (session == null) throw new VenueApplicationException(VenueApplicationErrorCode.SessionDoesNotExist);
         
-        session.ReleaseSeat(request.SeatRow, request.SeatNumber);
+        session.ReleaseSeat(request.SeatRow, request.SeatNumber/*, request.Version*/);
         
         await _venueRepository.Update(venue);
     }

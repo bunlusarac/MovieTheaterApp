@@ -13,6 +13,9 @@ public class SeatingState: EntityBase
     
     public SeatingState(SeatingLayout seatingLayout, bool seatNumbersDescend = false)
     {
+        //TODO: Workaround for not using Add
+        //Id = Guid.NewGuid();
+        
         StateSeats = new List<StateSeat>();
         Capacity = 0;
         LastRow = seatingLayout.LastRow;
@@ -46,10 +49,13 @@ public class SeatingState: EntityBase
         StateSeats[idx] = stateSeat;
     }
 
-    public void OccupySeat(char rowLetter, int seatNumber)
+    public void OccupySeat(char rowLetter, int seatNumber, string concurrencyToken)
     {
         var seat = GetSeat(rowLetter, seatNumber);
 
+        if (!ConcurrencyTokenHelper.ValidateConcurrencyToken(seat.Version, seat.ConcurrencySecret, concurrencyToken)) 
+            throw new VenueDomainException(VenueDomainErrorCode.SeatVersionExpired);
+        
         if (seat.Type == SeatType.Double)
         {
             if (Capacity < 2) throw new VenueDomainException(VenueDomainErrorCode.TheaterCapacityIsFull);
@@ -65,9 +71,15 @@ public class SeatingState: EntityBase
         SetSeat(seat);
     }
     
-    public void ReleaseSeat(char rowLetter, int seatNumber)
+    public void ReleaseSeat(char rowLetter, int seatNumber/*, string concurrencyToken*/)
     {
         var seat = GetSeat(rowLetter, seatNumber);
+
+        /*
+        if (!ConcurrencyTokenHelper.ValidateConcurrencyToken(seat.Version, seat.ConcurrencySecret, concurrencyToken)) 
+            throw new VenueDomainException(VenueDomainErrorCode.SeatVersionExpired);
+        */
+        
         seat.Release();
         SetSeat(seat);
 

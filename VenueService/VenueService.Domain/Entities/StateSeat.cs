@@ -13,19 +13,30 @@ public class StateSeat: EntityBase
     public int SeatNumber { get; set; }
     
     public uint Version { get; set; }
+    public string ConcurrencySecret { get; set; }
+    public Guid SeatingStateId { get; set; }
     
     public StateSeat(char row, SeatType type, int seatNumber)
     {
+        //TODO: Workaround for not using Add
+        //Id = Guid.NewGuid();
+
+        //SeatingStateId = seatingStateId;
+        
         Row = row;
         Occupied = false;
         Type = type;
         SeatNumber = seatNumber;
+        ConcurrencySecret = ConcurrencyTokenHelper.GenerateConcurrencySecret();
+        Version = 0;
     }
 
     public void Occupy()
     {
         if (Occupied) throw new VenueDomainException(VenueDomainErrorCode.SeatOccupied);
         if (Type == SeatType.Empty) throw new VenueDomainException(VenueDomainErrorCode.SeatDoesNotExist);
+
+        ++Version;
         Occupied = true;
     }
 
@@ -33,6 +44,8 @@ public class StateSeat: EntityBase
     {
         if (!Occupied) throw new VenueDomainException(VenueDomainErrorCode.SeatIsNotOccupied);
         if (Type == SeatType.Empty) throw new VenueDomainException(VenueDomainErrorCode.SeatDoesNotExist);
+        
+        --Version;
         Occupied = false;
     }
 

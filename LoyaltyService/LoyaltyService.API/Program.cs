@@ -2,10 +2,13 @@ using System.Reflection;
 using Hellang.Middleware.ProblemDetails;
 using LoyaltyService.API.DTOs;
 using LoyaltyService.Application.Commands;
+using LoyaltyService.Application.Exceptions;
 using LoyaltyService.Application.Persistence;
 using LoyaltyService.Application.Queries;
 using LoyaltyService.Domain.Entities;
 using LoyaltyService.Domain.Exceptions;
+using LoyaltyService.Infrastructure.Communicators;
+using LoyaltyService.Infrastructure.Messages;
 using LoyaltyService.Persistence.Contexts;
 using LoyaltyService.Persistence.Exceptions;
 using LoyaltyService.Persistence.Repositories;
@@ -20,12 +23,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<ILoyaltyCustomerRepository, LoyaltyCustomerRepository>();
 builder.Services.AddTransient<ICampaignRepository, CampaignRepository>();
 
+builder.Services.AddSingleton<IRabbitMessageHandler, RabbitMessageHandler>();
+builder.Services.AddSingleton<IRabbitCommunicator, RabbitCommunicator>();
+
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(CreateCampaignCommandHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(DeleteCampaignCommandHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(DepositToWalletCommandHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(RedeemCampaignCommandHandler).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(RefundCampaignCommandHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(RegisterLoyaltyCustomerCommandHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(UpdateCampaignCommandHandler).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(WithdrawFromWalletCommandHandler).Assembly);
@@ -48,6 +55,15 @@ builder.Services.AddProblemDetails(cfg =>
     });
     
     cfg.Map<LoyaltyPersistenceException>( (context, exception) => new ProblemDetails()
+    {
+        Detail = exception.ProblemDetails.Detail,
+        Status = exception.ProblemDetails.Status,
+        Title = exception.ProblemDetails.Title,
+        Type = exception.ProblemDetails.Type,
+        Instance = context.Request.Path.ToString()
+    });
+    
+    cfg.Map<LoyaltyApplicationException>( (context, exception) => new ProblemDetails()
     {
         Detail = exception.ProblemDetails.Detail,
         Status = exception.ProblemDetails.Status,
@@ -85,6 +101,8 @@ builder.Services.AddSwaggerGen(cfg =>
 
 var app = builder.Build();
 
+RegisterRabbitConsumerToExchange(app, "mta_exchange");
+
 app.UseProblemDetails();
 
 // Configure the HTTP request pipeline.
@@ -101,3 +119,21 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void RegisterRabbitConsumerToQueue(IApplicationBuilder app, string queueName)
+{
+    using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+    {
+        var communicator = scope.ServiceProvider.GetRequiredService<IRabbitCommunicator>();
+        communicator.ReceiveMessageFromQueue(queueName);
+    }
+}
+
+void RegisterRabbitConsumerToExchange(IApplicationBuilder app, string exchangeName)
+{
+    using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+    {
+        var communicator = scope.ServiceProvider.GetRequiredService<IRabbitCommunicator>();
+        communicator.ReceiveMessageFromExchange(exchangeName);
+    }
+}

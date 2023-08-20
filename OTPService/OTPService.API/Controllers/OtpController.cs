@@ -22,27 +22,37 @@ public class OtpController: ControllerBase
     [Route("validate")]
     public async Task<IActionResult> ValidateOtp([FromBody] ValidateOtpDto dto)
     {
+        /*
         var result = (Result) (await _mediator.Send(new ValidateOtpCommand(
             dto.PrimaryOtp, dto.SecondaryOtp, dto.UserId)) ?? Result.Error);
-
-        if (result.ResultCode == ResultCode.Error)
+        */
+        var bearer = HttpContext.Request.Headers.Authorization.ToString();
+        
+        try
+        {
+            var cmd = new ValidateOtpCommand(dto.PrimaryOtp, dto.SecondaryOtp, bearer);
+            return Ok(await _mediator.Send(cmd));
+        }
+        catch (Exception e)
+        {
             return Problem("Given OTP(s) are incorrect.",
                 "/otp/validate",
-                (int)OtpStatusCode.InvalidOtp, "Invalid OTP(s)");
-
-        return Ok();
+                StatusCodes.Status401Unauthorized, "Invalid OTP(s)");
+        }
     }
     
     [HttpPost]
     [Route("request")]
-    public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDto dto)
+    public async Task<IActionResult> RequestOtp()
     {
-        var result = (Result)(await _mediator.Send(new IssueOtpCommand(dto.UserId, dto.PrimaryOtpClaim, dto.EmailAddress, dto.PhoneNumber)) ?? Result.Error);
+        var bearer = HttpContext.Request.Headers.Authorization.ToString();
+        
+        var result = (Result)(await _mediator.Send(new IssueOtpCommand(bearer)) ?? Result.Error);
 
         if (result.ResultCode == ResultCode.Error)
             return Problem("An error occured during processing the OTP request.",
                 "/otp/request",
-                (int)OtpStatusCode.OtpRequestFailed, "OTP Request Failed");
+                StatusCodes.Status500InternalServerError, "OTP Request Failed");
         
         return Ok();
     }
@@ -56,7 +66,7 @@ public class OtpController: ControllerBase
         if (result == null || result.ResultCode == ResultCode.Error)
             return Problem("User already exists or an error occured during saving new user.",
                 "/otp/register",
-                (int)OtpStatusCode.RegistrationFailed, "Registration Failed");
+                StatusCodes.Status409Conflict, "Registration Failed");
 
         return Ok();
     }
@@ -70,7 +80,7 @@ public class OtpController: ControllerBase
         if (result.ResultCode == ResultCode.Error)
             return Problem("User not found or an error occured during saving new MFA state.",
                 "/otp/register",
-                (int)OtpStatusCode.MfaStatusUpdateFailed, "MFA Status Update Failed");
+                StatusCodes.Status404NotFound, "MFA Status Update Failed");
 
         return Ok();
     }

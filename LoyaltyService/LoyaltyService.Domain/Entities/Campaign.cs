@@ -14,7 +14,11 @@ public class Campaign: AggregateRoot
     public double DiscountRate { get; set; }
     public int MaxRedeems { get; set; }
     public DateTime ExpirationDate { get; set; }
-
+    
+    //Concurrency token
+    public uint Version { get; set; }
+    public string ConcurrencySecret { get; set; }
+    
     public Campaign(string name, string description, decimal cost, CampaignType type, double discountRate, int maxRedeems, DateTime expirationDate)
     {
         AssignCampaignDetails(name, description, cost, type, discountRate, maxRedeems, expirationDate);
@@ -42,7 +46,7 @@ public class Campaign: AggregateRoot
         if (maxRedeems <= 0) 
             throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidMaxRedeems);
         
-        if (expirationDate >= DateTime.UtcNow)
+        if (expirationDate <= DateTime.UtcNow)
             throw new LoyaltyDomainException(LoyaltyDomainErrorCode.InvalidExpirationDate);
     }
 

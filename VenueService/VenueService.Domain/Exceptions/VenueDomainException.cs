@@ -108,6 +108,14 @@ public class VenueDomainException: Exception
                 Detail = "Row identifier must be between A and Z.";
                 
                 break;
+            
+            case VenueDomainErrorCode.SeatVersionExpired :
+                Type = "https://docs.venue.com/errors/seat-version-expired";
+                Title = "Seat version expired";
+                Status = StatusCodes.Status409Conflict;
+                Detail = "The seat being attempted to be updated has been changed in the meantime and provided version is expired.";
+                
+                break;
             default:
                 Type = "";
                 Title = "Venue domain exception";

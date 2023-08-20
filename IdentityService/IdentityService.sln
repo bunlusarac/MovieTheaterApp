@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{B04C0629-BAB3-4201-B411-21A743A5DD6E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{9D01DF90-350A-4A30-AC2F-873259511F54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientProxy", "ClientProxy\ClientProxy.csproj", "{9D71120B-1801-42E5-830A-530B07E258F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +16,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B04C0629-BAB3-4201-B411-21A743A5DD6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B04C0629-BAB3-4201-B411-21A743A5DD6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B04C0629-BAB3-4201-B411-21A743A5DD6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B04C0629-BAB3-4201-B411-21A743A5DD6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D01DF90-350A-4A30-AC2F-873259511F54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D01DF90-350A-4A30-AC2F-873259511F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D01DF90-350A-4A30-AC2F-873259511F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D01DF90-350A-4A30-AC2F-873259511F54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D71120B-1801-42E5-830A-530B07E258F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D71120B-1801-42E5-830A-530B07E258F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D71120B-1801-42E5-830A-530B07E258F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D71120B-1801-42E5-830A-530B07E258F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

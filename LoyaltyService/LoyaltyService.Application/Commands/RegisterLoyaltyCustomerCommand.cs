@@ -1,4 +1,5 @@
 using LoyaltyService.Application.DTOs;
+using LoyaltyService.Application.Exceptions;
 using LoyaltyService.Application.Persistence;
 using LoyaltyService.Domain.Entities;
 using MediatR;
@@ -27,12 +28,19 @@ public class
 
     public async Task<LoyaltyCustomerCreatedDto> Handle(RegisterLoyaltyCustomerCommand request, CancellationToken cancellationToken)
     {
-        var loyaltyCustomer = new LoyaltyCustomer(request.CustomerId);
-        await _loyaltyCustomerRepository.Add(loyaltyCustomer);
-
-        return new LoyaltyCustomerCreatedDto
+        try
         {
-            LoyaltyCustomerId = loyaltyCustomer.Id
-        };
+            await _loyaltyCustomerRepository.GetByCustomerId(request.CustomerId);
+            throw new LoyaltyApplicationException(LoyaltyApplicationErrorCode.UserAlreadyExists);
+        }
+        catch (Exception e)
+        {
+            var loyaltyCustomer = new LoyaltyCustomer(request.CustomerId);
+            await _loyaltyCustomerRepository.Add(loyaltyCustomer);
+            return new LoyaltyCustomerCreatedDto
+            {
+                LoyaltyCustomerId = loyaltyCustomer.Id
+            };
+        }
     }
 }

@@ -1,7 +1,13 @@
 using System.Reflection;
+using System.Security.Claims;
 using Hangfire;
 using Hangfire.Mongo;
 using Hellang.Middleware.ProblemDetails;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MovieService.Domain.Exceptions;
 using MovieService.Persistence.Exceptions;
@@ -60,7 +66,7 @@ builder.Services.AddSwaggerGen(cfg =>
         Description = "API for managing movie metadata and rating.",
         Version = "v1",
     });
-    
+
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     cfg.IncludeXmlComments(xmlPath);
@@ -80,7 +86,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.UseHangfireDashboard();
 app.UseHangfireServer();

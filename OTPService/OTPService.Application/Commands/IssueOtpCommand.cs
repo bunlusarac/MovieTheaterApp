@@ -12,16 +12,14 @@ namespace OTPService.Application.Commands;
 public class IssueOtpCommand: IRequest<Result>
 {
     public Guid UserId;
-    public OtpClaim PrimaryOtpClaim;
-    public string? EmailAddress;
-    public string? PhoneNumber;
+    //public OtpClaim PrimaryOtpClaim;
+    //public string? EmailAddress;
+    //public string? PhoneNumber;
+    public string Bearer;
 
-    public IssueOtpCommand(Guid userId, OtpClaim primaryOtpClaim, string? emailAddress, string? phoneNumber)
+    public IssueOtpCommand(string bearer)
     {
-        UserId = userId;
-        PrimaryOtpClaim = primaryOtpClaim;
-        EmailAddress = emailAddress;
-        PhoneNumber = phoneNumber;
+        Bearer = bearer;
     }
 }
 
@@ -31,6 +29,7 @@ public class IssueOtpCommandHandler: IRequestHandler<IssueOtpCommand, Result>
         private readonly IConfiguration _configuration;
         private readonly IEmailServiceCommunicator _emailServiceCommunicator;
         private readonly ISmsServiceCommunicator _smsServiceCommunicator;
+        private readonly IIdentityServiceCommunicator _identityServiceCommunicator;
         private readonly ILogger<IssueOtpCommandHandler> _logger;
 
         public IssueOtpCommandHandler(
@@ -38,12 +37,14 @@ public class IssueOtpCommandHandler: IRequestHandler<IssueOtpCommand, Result>
             IConfiguration configuration, 
             IEmailServiceCommunicator emailServiceCommunicator, 
             ISmsServiceCommunicator smsServiceCommunicator, 
+            IIdentityServiceCommunicator identityServiceCommunicator,
             ILogger<IssueOtpCommandHandler> logger)
         {
             _repository = repository;
             _configuration = configuration;
             _emailServiceCommunicator = emailServiceCommunicator;
             _smsServiceCommunicator = smsServiceCommunicator;
+            _identityServiceCommunicator = identityServiceCommunicator;
             _logger = logger;
         }
 
@@ -51,7 +52,9 @@ public class IssueOtpCommandHandler: IRequestHandler<IssueOtpCommand, Result>
         { 
             try
             {
-                var otpUser = await _repository.GetByIssuedUserId(request.UserId);
+                var userInfo = await _identityServiceCommunicator.SendGetUserInfoRequest(request.Bearer);
+                
+                var otpUser = await _repository.GetByIssuedUserId(userInfo.SubjectId);
                 if (otpUser == null) return Result.Error;
                 
                 otpUser.RequestNewOtp();
@@ -69,6 +72,10 @@ public class IssueOtpCommandHandler: IRequestHandler<IssueOtpCommand, Result>
                 
                 _logger.Log(LogLevel.Information, $"Primary: {primaryOtp} Secondary: {secondaryOtp}");
                 
+                await _emailServiceCommunicator.SendEmailOtp(userInfo.Email, primaryOtp);
+                if (otpUser.MfaEnabled) await _smsServiceCommunicator.SendOtpSms(userInfo.PhoneNumber, secondaryOtp);
+
+                /*
                 if (otpUser.MfaEnabled)
                 {
                     if(string.IsNullOrWhiteSpace(request.PhoneNumber) && string.IsNullOrWhiteSpace(request.EmailAddress))
@@ -110,6 +117,7 @@ public class IssueOtpCommandHandler: IRequestHandler<IssueOtpCommand, Result>
                     default:
                         return Result.Error;
                 }
+                */
                            
                 return Result.Ok;
             }

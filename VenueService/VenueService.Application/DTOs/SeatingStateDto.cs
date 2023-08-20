@@ -29,6 +29,11 @@ public class SeatingStateDto
     public int SeatNumber { get; set; }
 
     /// <summary>
+    /// Versioning information for concurrency moderation
+    /// </summary>
+    //public uint Version { get; set; }
+
+    /// <summary>
     /// Represents state of an individual seat of a session 
     /// </summary>
     /// <param name="row">Letter specifying row that the seat resides on</param>

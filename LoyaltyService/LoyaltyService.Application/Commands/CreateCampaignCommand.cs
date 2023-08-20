@@ -1,5 +1,6 @@
 using LoyaltyService.Application.DTOs;
 using LoyaltyService.Application.Persistence;
+using LoyaltyService.Application.Utils;
 using LoyaltyService.Domain.Entities;
 using LoyaltyService.Domain.Utils;
 using LoyaltyService.Domain.ValueObjects;
@@ -48,6 +49,8 @@ public class CreateCampaignCommandHandler : IRequestHandler<CreateCampaignComman
             request.DiscountRate,
             request.MaxRedeems,
             request.ExpirationDate);
+
+        campaign.ConcurrencySecret = ConcurrencyTokenHelper.GenerateConcurrencySecret();
 
         await _campaignRepository.Add(campaign);
 

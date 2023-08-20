@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieService.Persistence", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieService.API", "MovieService.API\MovieService.API.csproj", "{CCF7D430-7D67-46C3-8ACA-B9488AF62CAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieService.Hangfire", "MovieService.Hangfire\MovieService.Hangfire.csproj", "{1A54589F-2F12-4A54-AFE2-47A5EE77E9C6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,9 +30,5 @@ Global
 		{CCF7D430-7D67-46C3-8ACA-B9488AF62CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCF7D430-7D67-46C3-8ACA-B9488AF62CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCF7D430-7D67-46C3-8ACA-B9488AF62CAC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A54589F-2F12-4A54-AFE2-47A5EE77E9C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A54589F-2F12-4A54-AFE2-47A5EE77E9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A54589F-2F12-4A54-AFE2-47A5EE77E9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A54589F-2F12-4A54-AFE2-47A5EE77E9C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

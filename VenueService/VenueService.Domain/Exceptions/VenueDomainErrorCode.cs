@@ -14,4 +14,5 @@ public enum VenueDomainErrorCode
     SessionDoesNotExist,
     NegativePriceAmount,
     SeatRowOutOfBounds,
+    SeatVersionExpired,
 }

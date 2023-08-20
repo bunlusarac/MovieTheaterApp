@@ -38,7 +38,7 @@ public class VenueController : ControllerBase
     /// </summary>
     /// <param name="venueId">ID of the venue</param>
     /// <returns>List of sessions</returns>
-    [HttpGet("{venueId}/session")]
+    [HttpGet("{venueId:guid}/session")]
     //[Route("{venueId}/session")]
     public async Task<IList<VenueSessionDto>> GetAllSessionsOfVenue(Guid venueId)
     {
@@ -46,11 +46,25 @@ public class VenueController : ControllerBase
     }
     
     /// <summary>
+    /// Get a session
+    /// </summary>
+    /// <param name="venueId">ID of venue session belongs to</param>
+    /// <param name="theaterId">ID of theater session belongs to</param>
+    /// <param name="sessionId">ID of the session</param>
+    /// <returns></returns>
+    [HttpGet("{venueId:guid}/theater/{theaterId:guid}/session/{sessionId:guid}")]
+    //[Route("{venueId}/session")]
+    public async Task<VenueSessionDto> GetSession(Guid venueId, Guid theaterId, Guid sessionId)
+    {
+        return await _mediator.Send(new GetSessionQuery(venueId, theaterId, sessionId));
+    }
+    
+    /// <summary>
     /// Get all theaters of a given venue
     /// </summary>
     /// <param name="venueId">ID of the venue</param>
     /// <returns>List of theaters</returns>
-    [HttpGet("{venueId}/theater")]
+    [HttpGet("{venueId:guid}/theater")]
     public async Task<IList<VenueTheaterDto>> GetAllTheatersOfVenue(Guid venueId)
     {
         return await _mediator.Send(new GetVenueTheatersQuery(venueId));
@@ -63,10 +77,43 @@ public class VenueController : ControllerBase
     /// <param name="theaterId">ID of the theater</param>
     /// <param name="sessionId">ID of the session</param>
     /// <returns>A list of seat states representing given session's seating status</returns>
-    [HttpGet("{venueId}/theater/{theaterId}/session/{sessionId}")]
+    [HttpGet("{venueId:guid}/theater/{theaterId:guid}/session/{sessionId:guid}/seating")]
     public async Task<List<SeatingStateDto>> GetSessionSeating(Guid venueId, Guid theaterId, Guid sessionId)
     {
         return await _mediator.Send(new GetSessionSeatingStateQuery(venueId, theaterId, sessionId));
+    }
+
+    /// <summary>
+    /// Get seating information of a session with versioning.
+    /// </summary>
+    /// <param name="venueId">ID of the venue</param>
+    /// <param name="theaterId">ID of the theater</param>
+    /// <param name="sessionId">ID of the session</param>
+    /// <param name="seating">Object representing position of a specific seat</param>
+    /// <param name="seatRow">Seat row</param>
+    /// <param name="seatNumber">Seat number</param>
+    /// <returns>A list of seat states representing given session's seating status</returns>
+    [HttpGet("{venueId:guid}/theater/{theaterId:guid}/session/{sessionId:guid}/seat/{seatRow}/{seatNumber:int}")]
+    public async Task<SeatingStateWithVersioningDto> GetSeatStateWithVersioning(Guid venueId, Guid theaterId, Guid sessionId, char seatRow, int seatNumber)
+    {
+        return await _mediator.Send(new GetSeatStateWithVersioningQuery(venueId,
+            theaterId,
+            sessionId,
+            seatRow,
+            seatNumber));
+    }
+    
+    /// <summary>
+    /// Get seating information of a session with versioning.
+    /// </summary>
+    /// <param name="venueId">ID of the venue</param>
+    /// <param name="theaterId">ID of the theater</param>
+    /// <param name="sessionId">ID of the session</param>
+    /// <returns>A list of seat states representing given session's seating status</returns>
+    [HttpGet("{venueId:guid}/theater/{theaterId:guid}/session/{sessionId:guid}/seating-with-versioning")]
+    public async Task<List<SeatingStateWithVersioningDto>> GetSessionSeatingWithVersioning(Guid venueId, Guid theaterId, Guid sessionId)
+    {
+        return await _mediator.Send(new GetSessionSeatingStateWithVersioningQuery(venueId, theaterId, sessionId));
     }
         
     /// <summary>
@@ -86,7 +133,7 @@ public class VenueController : ControllerBase
     /// <param name="venueId">ID of the venue</param>
     /// <param name="theater">Object representing theater to be created</param>
     /// <returns>ID of created theater, if successful. Otherwise, an error message</returns>
-    [HttpPut("{venueId}/theater")]
+    [HttpPut("{venueId:guid}/theater")]
     public async Task<TheaterCreatedDto> CreateTheater(Guid venueId, [FromBody] CreateTheaterDto theater)
     {
         return await _mediator.Send(new CreateTheaterCommand(venueId, theater.Name, theater.Type, theater.Width));
@@ -99,7 +146,7 @@ public class VenueController : ControllerBase
     /// <param name="theaterId">ID of the theater</param>
     /// <param name="session">Object representing session to be created</param>
     /// <returns>ID of created session, if successful. Otherwise, an error message</returns>
-    [HttpPut("{venueId}/theater/{theaterId}/session")]
+    [HttpPut("{venueId:guid}/theater/{theaterId:guid}/session")]
     public async Task<SessionCreatedDto> CreateSession(Guid venueId, Guid theaterId, [FromBody] CreateSessionDto session)
     {
         return await _mediator.Send(new CreateSessionCommand(
@@ -119,7 +166,7 @@ public class VenueController : ControllerBase
     /// <param name="theaterId">ID of the theater</param>
     /// <param name="layoutRow">Object representing new layout row that will be added to the theater's layout</param>
     /// <returns></returns>
-    [HttpPut("{venueId}/theater/{theaterId}/layout")]
+    [HttpPut("{venueId:guid}/theater/{theaterId:guid}/layout")]
     public async Task<IActionResult> AddRowToTheaterLayout(Guid venueId, Guid theaterId, [FromBody] LayoutRowDto layoutRow)
     {
         await _mediator.Send(new AddRowToTheaterLayoutCommand(venueId, theaterId, layoutRow.RowSeats, layoutRow.Times));
@@ -132,32 +179,32 @@ public class VenueController : ControllerBase
     /// <param name="venueId">ID of the venue</param>
     /// <param name="theaterId">ID of the theater</param>
     /// <param name="sessionId">ID of the session</param>
-    /// <param name="seating">Object representing position of a specific seat</param>
+    /// <param name="releaseSeat">Object representing position of a specific seat</param>
     /// <returns>Information regarding to the success of reservation</returns>
-    [HttpPost("{venueId}/theater/{theaterId}/session/{sessionId}/reserve")]
+    [HttpPost("{venueId:guid}/theater/{theaterId:guid}/session/{sessionId:guid}/reserve")]
     public async Task<IActionResult> ReserveSeat(
         Guid venueId,
         Guid theaterId,
         Guid sessionId, 
-        [FromBody] SeatingDto seating)
+        [FromBody] ReserveSeatDto releaseSeat)
     {
-        await _mediator.Send(new ReserveSessionSeatCommand(venueId, theaterId, sessionId, seating.SeatRow,
-                seating.SeatNumber));
+        await _mediator.Send(new ReserveSessionSeatCommand(venueId, theaterId, sessionId, releaseSeat.SeatRow,
+                releaseSeat.SeatNumber, releaseSeat.Version));
         return Ok();
     }
-    
+
     /// <summary>
     /// Release a seat for given session of given theater and venue
     /// </summary>
     /// <param name="venueId">ID of the venue</param>
     /// <param name="theaterId">ID of the theater</param>
     /// <param name="sessionId">ID of the session</param>
-    /// <param name="seating">Object representing position of a specific seat</param>
+    /// <param name="releaseSeat">Object representing position of a specific seat</param>
     /// <returns>Information regarding to the success of releasing</returns>
-    [HttpPost("{venueId}/theater/{theaterId}/session/{sessionId}/release")]
-    public async Task<IActionResult> ReleaseSeat(Guid venueId, Guid theaterId, Guid sessionId, [FromBody] SeatingDto seating)
+    [HttpPost("{venueId:guid}/theater/{theaterId:guid}/session/{sessionId:guid}/release")]
+    public async Task<IActionResult> ReleaseSeat(Guid venueId, Guid theaterId, Guid sessionId, [FromBody] ReleaseSeatDto releaseSeat)
     {
-        await _mediator.Send(new ReleaseSessionSeatCommand(venueId, theaterId, sessionId, seating.SeatRow, seating.SeatNumber)); 
+        await _mediator.Send(new ReleaseSessionSeatCommand(venueId, theaterId, sessionId, releaseSeat.SeatRow, releaseSeat.SeatNumber)); 
         return Ok();    
     }
 
@@ -168,7 +215,7 @@ public class VenueController : ControllerBase
    /// <param name="theaterId">ID of the theater</param>
    /// <param name="sessionId">ID of the session</param>
    /// <returns>Information regarding to the success of deletion</returns>
-   [HttpDelete("{venueId}/theater/{theaterId}/session/{sessionId}")]
+   [HttpDelete("{venueId:guid}/theater/{theaterId:guid}/session/{sessionId:guid}")]
    public async Task<IActionResult> DeleteSession(Guid venueId, Guid theaterId, Guid sessionId)
    { 
        await _mediator.Send(new DeleteSessionCommand(venueId, theaterId, sessionId));

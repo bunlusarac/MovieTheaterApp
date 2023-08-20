@@ -8,7 +8,8 @@ public class Pricing: EntityBase
 {
     public TicketType Type { get; set; }
     public virtual Price Price { get; set; }
-
+    public Guid SessionId { get; set; }
+    
     public Pricing(TicketType type, Price price)
     {
         Type = type;

@@ -10,4 +10,7 @@ public interface IRepositoryAsync<T> where T : AggregateRoot
     public Task Update(T entity);
     public Task Add(T entity);
     public Task DeleteById(Guid entityId);
+
+    public Task<T> GetByIdWithLockWait(Guid entityId);
+    public Task<List<T>> GetAllWithLockWait();
 }
