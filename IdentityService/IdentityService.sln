@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{9D01DF90-350A-4A30-AC2F-873259511F54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPAProxy", "SPAProxy\SPAProxy.csproj", "{A8DB0C96-D71F-44E8-A7E0-470A84037126}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientProxy", "ClientProxy\ClientProxy.csproj", "{9D71120B-1801-42E5-830A-530B07E258F5}"
 EndProject
 Global
@@ -22,10 +20,6 @@ Global
 		{9D01DF90-350A-4A30-AC2F-873259511F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D01DF90-350A-4A30-AC2F-873259511F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D01DF90-350A-4A30-AC2F-873259511F54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8DB0C96-D71F-44E8-A7E0-470A84037126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8DB0C96-D71F-44E8-A7E0-470A84037126}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8DB0C96-D71F-44E8-A7E0-470A84037126}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8DB0C96-D71F-44E8-A7E0-470A84037126}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9D71120B-1801-42E5-830A-530B07E258F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9D71120B-1801-42E5-830A-530B07E258F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D71120B-1801-42E5-830A-530B07E258F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
