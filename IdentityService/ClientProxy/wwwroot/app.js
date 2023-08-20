@@ -109,10 +109,9 @@ async function localApi() {
 }
 
 async function remoteApi() {
-    var req = new Request("/gateway/moviess", {
+    var req = new Request("/gateway/movie", {
         headers: new Headers({
             "X-CSRF": "1",
-            "Short-Token": "ISbBGdwe5AuB5DW7cgFD4Q==",
         }),
     });
 

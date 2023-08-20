@@ -3,11 +3,20 @@ using System.Net.Mime;
 using System.Security.Claims;
 using APIGateway.Communicators;
 using APIGateway.DelegatingHandlers;
+using APIGateway.Persistence;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var redisConnectionString = builder.Configuration.GetConnectionString("RedisConnection");
+    return ConnectionMultiplexer.Connect(redisConnectionString);
+});
+builder.Services.AddSingleton<IRedisRepository, RedisRepository>();
 
 builder.Services.AddSingleton<IdentityServiceCommunicator>();
 
@@ -34,7 +43,10 @@ builder.Services.AddAuthorization(o =>
 });
 
 builder.Configuration.AddJsonFile("ocelot.json");
-builder.Services.AddOcelot().AddDelegatingHandler<ShortSessionAuthenticationHandler>();
+builder.Services
+    .AddOcelot()
+    .AddDelegatingHandler<ShortSessionAuthenticationHandler>()
+    .AddDelegatingHandler<TokenBasedRateLimitingHandler>();
 
 builder.Services.AddLogging();
 /*
@@ -50,6 +62,7 @@ builder.Services.AddKeycloakAuthentication(builder.Configuration);
 
 */
 
+/*
 var cfg = new OcelotPipelineConfiguration()
 {
     PreQueryStringBuilderMiddleware = async (ctx, next) =>
@@ -57,18 +70,18 @@ var cfg = new OcelotPipelineConfiguration()
         await next.Invoke();
     }
 };
-
+*/
 var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 
 app.UseRouting();
 app.MapControllers().RequireAuthorization("gateway");
 
-app.UseOcelot(cfg);
+app.UseOcelot();
 
 app.Run();

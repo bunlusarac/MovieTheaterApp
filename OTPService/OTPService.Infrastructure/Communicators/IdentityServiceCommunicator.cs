@@ -22,4 +22,18 @@ public class IdentityServiceCommunicator: CommunicatorBase, IIdentityServiceComm
         var dto = JsonConvert.DeserializeObject<ShortSessionCreatedDto>(dtoJson);
         return dto;
     }
+    
+    public async Task<UserInfoDto> SendGetUserInfoRequest(string bearer)
+    {
+        AddBearerHeader(bearer);
+        var response = await SendGetRequest("connect/userinfo");
+        RemoveBearerHeader();
+        
+        if (!response.IsSuccessStatusCode) throw new InvalidOperationException();
+
+        var json = await response.Content.ReadAsStringAsync();
+        var dto = JsonConvert.DeserializeObject<UserInfoDto>(json);
+
+        return dto;
+    }
 }

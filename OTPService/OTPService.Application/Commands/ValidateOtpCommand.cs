@@ -13,13 +13,13 @@ public class ValidateOtpCommand: IRequest<ShortSessionCreatedDto>
 {
     public string PrimaryOtp;
     public string SecondaryOtp;
-    public Guid UserId;
+    public string Bearer;
 
-    public ValidateOtpCommand(string primaryOtp, string secondaryOtp, Guid userId)
+    public ValidateOtpCommand(string primaryOtp, string secondaryOtp, string bearer)
     {
         PrimaryOtp = primaryOtp;
         SecondaryOtp = secondaryOtp;
-        UserId = userId;
+        Bearer = bearer;
     }
 }
 
@@ -47,8 +47,9 @@ public class ValidateOtpCommandHandler : IRequestHandler<ValidateOtpCommand, Sho
 
         public async Task<ShortSessionCreatedDto> Handle(ValidateOtpCommand request, CancellationToken cancellationToken)
         {
-         
-            var user = await _repository.GetByIssuedUserId(request.UserId);
+            var userInfo = await _identityServiceCommunicator.SendGetUserInfoRequest(request.Bearer);
+            
+            var user = await _repository.GetByIssuedUserId(userInfo.SubjectId);
             /*
             if (user == null) return Result.Error;
             if (user.IsDisposed) return Result.Error;
@@ -67,7 +68,6 @@ public class ValidateOtpCommandHandler : IRequestHandler<ValidateOtpCommand, Sho
             try
             {
                 Result validationResult;
-
                 
                 if (user.MfaEnabled)
                 {
@@ -87,8 +87,6 @@ public class ValidateOtpCommandHandler : IRequestHandler<ValidateOtpCommand, Sho
                     //TODO Strategy
                     if (primaryValidity)
                     {
-                        
-
                         user.ValidateOtp();
                         validationResult = Result.Ok;
                     }

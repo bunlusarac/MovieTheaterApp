@@ -31,4 +31,14 @@ public class CommunicatorBase: IHttpCommunicator
     {
         return  await _httpClient.DeleteAsync(route);
     }
+    
+    public void AddBearerHeader(string bearer)
+    {
+        _httpClient.DefaultRequestHeaders.Add("Authorization", bearer);
+    }
+    
+    public void RemoveBearerHeader()
+    {
+        _httpClient.DefaultRequestHeaders.Remove("Authorization");
+    }
 }

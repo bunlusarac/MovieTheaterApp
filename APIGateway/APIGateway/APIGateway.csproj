@@ -9,6 +9,7 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
       <PackageReference Include="Ocelot" Version="19.0.2" />
+      <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
     </ItemGroup>
 
 </Project>
