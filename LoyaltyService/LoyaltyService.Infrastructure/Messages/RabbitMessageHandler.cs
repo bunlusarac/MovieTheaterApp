@@ -30,14 +30,28 @@ public class RabbitMessageHandler: IRabbitMessageHandler
         switch (messageEvent)
         {
             case RabbitMessageEvent.EVENT_USER_REGISTERED:
-                var message = JsonConvert.DeserializeObject<UserRegisteredMessage>(messageJson);
+                var userRegisteredMessage = JsonConvert.DeserializeObject<UserRegisteredMessage>(messageJson);
 
-                if (message is not null)
+                if (userRegisteredMessage is not null)
                 {
                     using (var scope = _serviceProvider.CreateAsyncScope())
                     {
                         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                        var command = new RegisterLoyaltyCustomerCommand(message.UserId);
+                        var command = new RegisterLoyaltyCustomerCommand(userRegisteredMessage.UserId);
+                        await mediator.Send(command);    
+                    }
+                }
+                
+                break;
+            case RabbitMessageEvent.EVENT_REWARD_PURCHASE:
+                var rewardPurchaseMessage = JsonConvert.DeserializeObject<RewardPurchaseMessage>(messageJson);
+
+                if (rewardPurchaseMessage is not null)
+                {
+                    using (var scope = _serviceProvider.CreateAsyncScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        var command = new DepositToWalletCommand(rewardPurchaseMessage.CustomerId, rewardPurchaseMessage.PointsAmount);
                         await mediator.Send(command);    
                     }
                 }

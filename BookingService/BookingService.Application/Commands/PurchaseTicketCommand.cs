@@ -1,7 +1,7 @@
 
 using BookingService.Application.Communicators;
 using BookingService.Application.DTOs;
-
+using BookingService.Application.Messages;
 using BookingService.Application.Persistence;
 
 using BookingService.Domain.Entities;
@@ -133,6 +133,9 @@ public class PurchaseTicketCommandHandler : IRequestHandler<PurchaseTicketComman
                 userInfo.SubjectId);
             throw new InvalidOperationException(); //TODO
         }
+
+        var rewardMessage = new RewardPurchaseMessage(userInfo.SubjectId, 0.2m * finalPrice);
+        _rabbitCommunicator.SendMessageToExchange("mta_exchange", rewardMessage);
         
         return new TicketPurchasedDto
         {

@@ -64,13 +64,12 @@ public class IssueOtpCommandHandler: IRequestHandler<IssueOtpCommand, Result>
                     return Result.Error;
                 }
 
-                //TODO
                 var otpSize = int.Parse(_configuration.GetSection("OtpSize").Value);
 
                 var primaryOtp = new Hotp(otpUser.PrimarySecret, hotpSize: otpSize).ComputeHOTP(otpUser.PrimaryCounter);
                 var secondaryOtp = new Hotp(otpUser.SecondarySecret, hotpSize: otpSize).ComputeHOTP(otpUser.SecondaryCounter);
                 
-                _logger.Log(LogLevel.Information, $"Primary: {primaryOtp} Secondary: {secondaryOtp}");
+                //_logger.Log(LogLevel.Information, $"Primary: {primaryOtp} Secondary: {secondaryOtp}");
                 
                 await _emailServiceCommunicator.SendEmailOtp(userInfo.Email, primaryOtp);
                 if (otpUser.MfaEnabled) await _smsServiceCommunicator.SendOtpSms(userInfo.PhoneNumber, secondaryOtp);
