@@ -117,10 +117,7 @@
       "UpstreamPathTemplate": "/campaign",
       "UpstreamHttpMethod": [
         "GET"
-      ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      }
+      ]
     },
     {
       "DownstreamPathTemplate": "/movies/{movieId}/rate/{rating}",
@@ -137,6 +134,12 @@
       ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
+      },
+      "DelegatingHandlers": [
+        "MovieRatingRateLimitingHandler"
+      ],
+      "AddHeadersToRequest": {
+        "Customer-Id": "Claims[sub] > value[0] > |"
       }
     },
     {
@@ -163,20 +166,23 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/ticket/{customerId}",
+      "DownstreamPathTemplate": "/ticket",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 8003
+          "Port": 8005
         }
       ],
-      "UpstreamPathTemplate": "/ticket/{customerId}",
+      "UpstreamPathTemplate": "/ticket",
       "UpstreamHttpMethod": [
         "GET"
       ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
+      },
+      "AddHeadersToRequest": {
+        "Customer-Id": "Claims[sub] > value[0] > |"
       }
     }
   ],

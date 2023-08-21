@@ -17,9 +17,9 @@ builder.Services.AddTransient<IEmailServiceCommunicator, EmailServiceCommunicato
 builder.Services.AddTransient<ISmsServiceCommunicator, SmsServiceCommunicator>();
 
 //Were singleton before
-builder.Services.AddScoped<IIdentityServiceCommunicator, IdentityServiceCommunicator>();
-builder.Services.AddScoped<IRabbitMessageHandler, RabbitMessageHandler>();
-builder.Services.AddScoped<IRabbitCommunicator, RabbitCommunicator>();
+builder.Services.AddSingleton<IIdentityServiceCommunicator, IdentityServiceCommunicator>();
+builder.Services.AddSingleton<IRabbitMessageHandler, RabbitMessageHandler>();
+builder.Services.AddSingleton<IRabbitCommunicator, RabbitCommunicator>();
 //builder.Services.AddHostedService<RabbitSubscriber>();
 
 builder.Services.AddHttpClient("IdentityService", client =>

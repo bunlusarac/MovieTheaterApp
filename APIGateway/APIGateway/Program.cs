@@ -46,7 +46,8 @@ builder.Configuration.AddJsonFile("ocelot.json");
 builder.Services
     .AddOcelot()
     .AddDelegatingHandler<ShortSessionAuthenticationHandler>()
-    .AddDelegatingHandler<TokenBasedRateLimitingHandler>();
+    .AddDelegatingHandler<TokenBasedRateLimitingHandler>()
+    .AddDelegatingHandler<MovieRatingRateLimitingHandler>();
 
 builder.Services.AddLogging();
 /*
