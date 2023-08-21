@@ -8,6 +8,9 @@ public class TokenBasedRateLimitingHandler: DelegatingHandler
     private readonly ILogger<TokenBasedRateLimitingHandler> _logger;
     private readonly IRedisRepository _redisRepository;
 
+    public virtual int MaxRequests { get; set; } = 3;
+    public virtual TimeSpan TimeWindow { get; set; } = TimeSpan.FromHours(3);
+    
     public TokenBasedRateLimitingHandler(ILogger<TokenBasedRateLimitingHandler> logger, IRedisRepository redisRepository)
     {
         _logger = logger;
@@ -23,18 +26,17 @@ public class TokenBasedRateLimitingHandler: DelegatingHandler
             return new HttpResponseMessage(HttpStatusCode.Unauthorized);
 
         //TODO get from configuration
-        const int maxRequests = 3;
-        var timeWindow = TimeSpan.FromHours(3);
+        
         
         var key = $"{userId}:{endpoint}";
         var requestCount = await _redisRepository.Increment(key);
 
-        if (requestCount > maxRequests)
+        if (requestCount > MaxRequests)
         {
             return new HttpResponseMessage(HttpStatusCode.TooManyRequests);
         }
 
-        await _redisRepository.SetExpiration(key, timeWindow);
+        await _redisRepository.SetExpiration(key, TimeWindow);
         return await base.SendAsync(request, cancellationToken);
     }
 }

@@ -18,10 +18,13 @@ public class TicketController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("{customerId}")]
-    public async Task<List<CustomerTicketDto>> GetTicketsByCustomerId(Guid customerId)
+    [HttpGet]
+    public async Task<List<CustomerTicketDto>> GetTicketsByCustomerId()
     {
-        var cmd = new GetCustomerTicketsQuery(customerId);
+        var sub = HttpContext.Request.Headers["Customer-Id"].FirstOrDefault();
+        if (sub is null) throw new InvalidOperationException();
+        
+        var cmd = new GetCustomerTicketsQuery(Guid.Parse(sub));
         var tickets = await _mediator.Send(cmd);
         return tickets.Select(t => new CustomerTicketDto
         {
