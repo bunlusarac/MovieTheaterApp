@@ -85,13 +85,21 @@ document.getElementById("register").addEventListener("click", register, false);
 document.getElementById("local").addEventListener("click", localApi, false);
 document.getElementById("remote").addEventListener("click", remoteApi, false);
 document.getElementById("logout").addEventListener("click", logout, false);
+document.querySelector('#bff-silent-login').src = '/bff/silent-login';
+
+window.addEventListener("message", e => {
+    if (e.data && e.data.source === 'bff-silent-login' && e.data.isLoggedIn) {
+        // we now have a user logged in silently, so reload this window
+        if(userClaims === null) window.location.reload();
+    }
+});
 
 function login() {
     window.location = "/bff/login";
 }
 
 function register() {
-    window.location = "https://localhost:8006/Account/Register?returnUrl=https://localhost:8007/signin-oidc";
+    window.location = "https://localhost:8006/Account/Register?returnUrl=https://localhost:8007/";
 }
 
 function logout() {

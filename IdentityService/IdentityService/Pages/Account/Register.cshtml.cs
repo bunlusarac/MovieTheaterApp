@@ -162,7 +162,6 @@ namespace IdentityService.Pages.Account
                 user.IsStudent = false;
                 user.StudentExpirationDate = DateTime.MinValue;
                 
-                // FIX: Postgres exception, I think SetEmailAsync is shadowing SetPhoneNumberAsync's UpdateUser 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
@@ -197,7 +196,11 @@ namespace IdentityService.Pages.Account
                             UserId = Guid.Parse(user.Id)
                         };
                         
+                        
+                        //Notify other services that a new user has been registered 
                         _rabbitCommunicator.SendMessageToExchange("mta_exchange", message);
+                        
+                        //Redirect back to returnUrl
                         return Redirect(returnUrl);
                     }
                 }
